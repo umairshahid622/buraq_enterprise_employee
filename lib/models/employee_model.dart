@@ -1,0 +1,44 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class Employee {
+  String empId;
+  String createdBy;
+  String updatedBy;
+  String firstName;
+  String lastName;
+  String phone;  
+  String status;
+  String role;
+  DateTime createdAt;
+  DateTime updatedAt;
+
+  Employee({
+    required this.empId,
+    required this.createdBy,
+    required this.updatedBy,
+    required this.firstName,
+    required this.lastName,
+    required this.phone,    
+    required this.status,
+    required this.role,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory Employee.fromSnapshot(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+    return Employee(
+      empId: doc.id,
+      firstName: data['first_name'] ?? '',
+      lastName: data['last_name'] ?? '',
+      phone: data['phone'] ?? '',
+      status: data['status'] ?? '',
+      role: data['role'] ?? '',      
+      createdBy: data['createdBy'] ?? '',
+      updatedBy: data['updatedBy'] ?? '',
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    );
+  }
+}
