@@ -1,5 +1,5 @@
 
-import 'package:buraq_enterprise_employee/screen/controllers/common/theme_controller.dart';
+import 'package:buraq_enterprise_employee/core/controllers/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

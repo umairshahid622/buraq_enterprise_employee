@@ -35,13 +35,13 @@ class AppUtils {
 
   static void showToast({
     required String label,
-    required ToastVariants vairant,
+    required ToastVariants variant,
   }) {
     final scaffoldState = AppConstants.scaffoldMessengerKey.currentState;
     if (scaffoldState == null) return;
     final context = scaffoldState.context;
     final Color backgroundColor;
-    switch (vairant) {
+    switch (variant) {
       case ToastVariants.success:
         backgroundColor = context.appColors.colorGreen;
         break;

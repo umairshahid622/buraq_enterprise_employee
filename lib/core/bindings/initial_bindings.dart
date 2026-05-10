@@ -1,6 +1,6 @@
 
-import 'package:buraq_enterprise_employee/screen/controllers/common/theme_controller.dart';
-import 'package:buraq_enterprise_employee/screen/controllers/common/user_controller.dart';
+import 'package:buraq_enterprise_employee/core/controllers/theme_controller.dart';
+import 'package:buraq_enterprise_employee/core/controllers/user_controller.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/splash/splash_screen_controller.dart';
 import 'package:get/get.dart';
 

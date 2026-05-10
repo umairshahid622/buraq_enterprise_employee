@@ -1,6 +1,6 @@
 import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
 import 'package:buraq_enterprise_employee/models/user_model.dart';
-import 'package:buraq_enterprise_employee/screen/controllers/common/user_controller.dart';
+import 'package:buraq_enterprise_employee/core/controllers/user_controller.dart';
 import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:buraq_enterprise_employee/utils/app_util.dart';
 import 'package:get/get.dart';
@@ -34,7 +34,7 @@ class ProfileScreenController extends GetxController {
       await _userController.signOut();
     } catch (e) {
       String error = AppHelper.getFirebaseErrorMessage(message: e.toString());
-      AppUtils.showToast(label: error, vairant: ToastVariants.error);
+      AppUtils.showToast(label: error, variant: ToastVariants.error);
     } finally {
       isLogoutProcessing.value = false;
     }

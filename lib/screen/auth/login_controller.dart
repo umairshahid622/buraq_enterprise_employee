@@ -1,13 +1,11 @@
 
-import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
+import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart';
 import 'package:buraq_enterprise_employee/data/auth/auth_repository.dart';
-import 'package:buraq_enterprise_employee/screen/controllers/common/user_controller.dart';
-import 'package:buraq_enterprise_employee/utils/app_helper.dart';
-import 'package:buraq_enterprise_employee/utils/app_util.dart';
+import 'package:buraq_enterprise_employee/core/controllers/user_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class LoginController extends GetxController {
+class LoginController extends BaseController {
   final phoneNumberController = TextEditingController();
   final RxBool loading = false.obs;
   final RxBool otpLoading = false.obs;
@@ -35,49 +33,33 @@ class LoginController extends GetxController {
       return;
     }
     loading.value = true;
-    print("Verify Phone Number Called with: ${phoneNumberController.text}"); // Debug print
-    try {
-      await AuthRepository().verifyPhoneNumber(
+    await safeCall(
+      () => AuthRepository().verifyPhoneNumber(
         phoneNumber: phoneNumberController.text,
         onCodeSent: (verId) {
           _verificationId = verId;
           loading.value = false;
           onCodeSent?.call(verId);
-        },        
-      );
-    } catch (e) {
-      loading.value = false;
-      String error = AppHelper.getFirebaseErrorMessage(message: e.toString());
-      print(error); // Debug print
-      AppUtils.showToast(
-        label: error,
-        vairant: ToastVariants.error,
-      );
-    }
+        },
+      ),
+      onStart: () => loading.value = true,
+      onComplete: () => loading.value = false,
+    );
   }
 
   Future<void> verifyOtp() async {
-    if (!otpFormKey.currentState!.validate()) {
-      return;
-    }
+    if (!otpFormKey.currentState!.validate()) return;
+    if (verificationId == null || completeOtp.length != otpLength) return;
 
-    if (verificationId == null || completeOtp.length != otpLength) {
-      return;
-    }
-    otpLoading.value = true;
-    try {
-      await AuthRepository().signInWithOtp(verificationId!, completeOtp);
+    final credential = await safeCall(
+      () => AuthRepository().signInWithOtp(verificationId!, completeOtp),
+      onStart: () => otpLoading.value = true,
+      onComplete: () => otpLoading.value = false,
+    );
 
+    if (credential != null) {
       final userController = Get.find<UserController>();
       await userController.fetchUserProfile();
-    } catch (e) {
-      String error = AppHelper.getFirebaseErrorMessage(message: e.toString());
-      AppUtils.showToast(
-        label: error,
-        vairant: ToastVariants.error,
-      );
-    } finally {
-      otpLoading.value = false;
     }
   }
 

@@ -1,4 +1,4 @@
-import 'package:buraq_enterprise_employee/screen/controllers/common/user_controller.dart';
+import 'package:buraq_enterprise_employee/core/controllers/user_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 

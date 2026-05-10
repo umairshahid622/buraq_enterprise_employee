@@ -1,10 +1,11 @@
+import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart';
 import 'package:buraq_enterprise_employee/data/auth/auth_repository.dart';
 import 'package:buraq_enterprise_employee/data/auth/employee_repository.dart';
 import 'package:buraq_enterprise_employee/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
-class UserController extends GetxController {
+class UserController extends BaseController {
   final AuthRepository _authRepo = AuthRepository();
 
   final EmployeeRepository _employeeRepository = EmployeeRepository();
@@ -41,36 +42,22 @@ class UserController extends GetxController {
   // Fetch profile
   // -------------------------------
   Future<void> fetchUserProfile() async {
-    try {
-      isLoading.value = true;
+    final data = await safeCall(
+      () => _employeeRepository.getEmployeeData(),
+      onStart: () => isLoading.value = true,
+      onComplete: () => isLoading.value = false,
+    );
 
-      final UserModel? data = await _employeeRepository.getEmployeeData();
-
-      if (data != null) {
-        _user.value = data;
-      } else {
-        _user.value = null;
-        await signOut();
-        
-      }
-    } catch (e) {
+    if (data != null) {
+      _user.value = data;
+    } else {
       _user.value = null;
-
-      Get.log('Fetch User Error: $e');
-    } finally {
-      isLoading.value = false;
+      await signOut();
     }
   }
 
-
-  // -------------------------------
-  // Clear user (Logout)
-  // -------------------------------
   Future<void> signOut() async {
-    await _authRepo.signOut().then( (_) {
-      _user.value = null;
-    }).catchError((e) {
-      Get.log('Sign Out Error: $e');
-    });
+    await safeCall(() => _authRepo.signOut());
+    _user.value = null;
   }
 }
