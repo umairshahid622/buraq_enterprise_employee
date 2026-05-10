@@ -22,8 +22,9 @@ class HomeScreenController extends BaseController {
   double _spentAmount = 0.0;
 
   //Lists
-   List<ProjectModel> _projects = [];
-   List<AllocatedAmountModel> _allocatedAmounts = [];
+  List<ProjectModel> _projects = [];
+  List<AllocatedAmountModel> _allocatedAmounts = [];
+  List<ProjectWithBudget> _projectsWithBudget = [];
 
   @override
   void onInit() {
@@ -38,7 +39,7 @@ class HomeScreenController extends BaseController {
     final results = await safeCall(
       () => Future.wait([
         _allocatedAmountRepository.getAllocatedAmount(employeeId: empId),
-        _fetchProjects(empId)
+        _fetchProjects(empId),
       ]),
     );
 
@@ -47,6 +48,7 @@ class HomeScreenController extends BaseController {
       _allocatedAmounts = list;
       _totalAllocatedAmount = total;
       _projects = results[1] as List<ProjectModel>;
+      _projectsWithBudget = _joinProjectsWithBudget();
       update();
     }
   }
@@ -57,8 +59,29 @@ class HomeScreenController extends BaseController {
     return _projectRepo.getProjectsByIds(projectIds: projectIds);
   }
 
+  List<ProjectWithBudget> _joinProjectsWithBudget() {
+    final budgetMap = {for (final a in _allocatedAmounts) a.projectId: a};
+
+    return _projects.map((project) {
+      return ProjectWithBudget(
+        project: project,
+        allocatedAmount: budgetMap[project.projectId], // null if no allocation
+      );
+    }).toList();
+  }
+
   double get allocatedAmount => _totalAllocatedAmount;
   double get spentAmount => _spentAmount;
-  List<ProjectModel> get projects => _projects;
-  List<AllocatedAmountModel> get allocatedAmounts => _allocatedAmounts;
+
+  List<ProjectWithBudget> get projectsWithBudget => _projectsWithBudget;
+}
+
+class ProjectWithBudget {
+  final ProjectModel project;
+  final AllocatedAmountModel? allocatedAmount;
+
+  const ProjectWithBudget({required this.project, this.allocatedAmount});
+
+  double get allocated => allocatedAmount?.amount.toDouble() ?? 0.0;
+  double get remaining => project.remainingBudget.toDouble();
 }

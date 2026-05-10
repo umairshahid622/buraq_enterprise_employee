@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget _continueButton(LoginController controller, BuildContext context) {
     return Obx(() {
       return AppFilledButton(
-        isLoading: controller.loading.value,
+        isLoading: controller.isLoading.value,
         buttonText: "Continue",
         onPressedCallBack: () {
           controller.verifyPhoneNumber((verId) {

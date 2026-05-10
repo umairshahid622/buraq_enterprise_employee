@@ -44,23 +44,23 @@ class HomeScreenWidget extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: AppConstants.commonVerticalSpacing / 2),
-                ListView.builder(
+                ListView.separated(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: controller.projects.length,
+                  itemCount: controller.projectsWithBudget.length,
                   itemBuilder: (context, index) {
-                    final project = controller.projects[index];
-                    final totalBudget = 0;
-                    final spentBudget = 0;
+                    final project =
+                        controller.projectsWithBudget[index].project;
+                    final allocatedAmount =
+                        controller.projectsWithBudget[index].allocatedAmount;
+                    final totalBudget = allocatedAmount?.amount.toInt() ?? 0;
+                    final spentBudget = 300;
+                    final leftBudget = totalBudget - spentBudget;
                     final double progressValue = AppHelper.calculatePercentage(
                       spentBudget,
                       totalBudget,
                     );
                     return AppCardWidget(
-                      onTap: () {
-                        print(controller.allocatedAmounts.map((e) => e.toJson()).toList());
-                        print(controller.projects.map((e) => e.toMap()).toList());
-                      },
                       verticalPadding: AppConstants.padding,
                       cardWidget: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,23 +90,40 @@ class HomeScreenWidget extends StatelessWidget {
                             children: [
                               AppTextBody(text: "Budget Used"),
                               AppTextBody(
-                                text: '${progressValue.round()}%',
+                                text: '$progressValue%',
                                 color: context.appColors.text,
                               ),
                             ],
                           ),
-                          SizedBox(height: AppConstants.commonVerticalSpacing/4),
+                          SizedBox(
+                            height: AppConstants.commonVerticalSpacing / 4,
+                          ),
                           LinearProgressIndicator(
                             borderRadius: BorderRadius.circular(12),
                             value: progressValue / 100,
                             minHeight: 6.5,
                             backgroundColor: context.appColors.borderColor,
                           ),
-                          SizedBox(height: AppConstants.commonVerticalSpacing/4),
+                          SizedBox(
+                            height: AppConstants.commonVerticalSpacing / 4,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AppTextBody(text: "${AppHelper.formatPKR(spentBudget)} Spent"),
+                              AppTextBody(
+                                text: '${AppHelper.formatPKR(leftBudget)} Left',
+                                color: context.appColors.colorGreen,
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     );
                   },
+                  separatorBuilder: (context, index) => SizedBox(
+                    height: AppConstants.commonVerticalSpacing,
+                  ),
                 ),
               ],
             ),

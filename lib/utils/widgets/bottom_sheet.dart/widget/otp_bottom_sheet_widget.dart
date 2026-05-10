@@ -86,8 +86,8 @@ class OtpBottomSheetWidget extends StatelessWidget {
           const SizedBox(height: 20),
           Obx(
             () => AppFilledButton(
-              isLoading: controller.otpLoading.value,
-              isEnable: !controller.otpLoading.value,
+              isLoading: controller.isLoading.value,
+              isEnable: !controller.isLoading.value,
               buttonText: "Verify Now",
               onPressedCallBack: () async {
                 await controller.verifyOtp();

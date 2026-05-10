@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 
 class LoginController extends BaseController {
   final phoneNumberController = TextEditingController();
-  final RxBool loading = false.obs;
   final RxBool otpLoading = false.obs;
 
   String? _verificationId;
@@ -40,8 +39,6 @@ class LoginController extends BaseController {
           onCodeSent?.call(verId);
         },
       ),
-      onStart: () => loading.value = true,
-      onComplete: () => loading.value = false,
     );
   }
 
@@ -50,9 +47,7 @@ class LoginController extends BaseController {
     if (verificationId == null || completeOtp.length != otpLength) return;
 
     final credential = await safeCall(
-      () => AuthRepository().signInWithOtp(verificationId!, completeOtp),
-      onStart: () => otpLoading.value = true,
-      onComplete: () => otpLoading.value = false,
+      () => AuthRepository().signInWithOtp(verificationId!, completeOtp),      
     );
 
     if (credential != null) {

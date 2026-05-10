@@ -12,8 +12,6 @@ class UserController extends BaseController {
 
   final Rx<UserModel?> _user = Rx<UserModel?>(null);
 
-  final RxBool isLoading = false.obs;
-
   /// Public getter
   UserModel? get user => _user.value;
 
@@ -44,8 +42,6 @@ class UserController extends BaseController {
   Future<void> fetchUserProfile() async {
     final data = await safeCall(
       () => _employeeRepository.getEmployeeData(),
-      onStart: () => isLoading.value = true,
-      onComplete: () => isLoading.value = false,
     );
 
     if (data != null) {
