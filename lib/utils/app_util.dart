@@ -195,7 +195,7 @@ class AppUtils {
     );
   }
 
-  static Divider divider({double thickness = 1.0}) {
-    return Divider(color: Colors.grey[300], thickness: thickness);
+  static Divider divider({required AppColorScheme colorScheme, double thickness = 1.0}) {
+    return Divider(color: colorScheme.secondary, thickness: thickness);
   }
 }
