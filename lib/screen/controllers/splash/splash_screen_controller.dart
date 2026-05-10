@@ -33,14 +33,9 @@ class SplashController extends GetxController {
 
     if (user != null) {
       await _userController.fetchUserProfile();      
-
       
-
-      await Future.wait([
-        
-      ]);
     } else {
-      
+      _userController.signOut();      
     }
 
     final minSplashDuration = const Duration(milliseconds: 1500);

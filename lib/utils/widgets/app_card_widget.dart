@@ -7,11 +7,13 @@ class AppCardWidget extends StatelessWidget {
   final Widget cardWidget;
   final void Function()? onTap;
   final Color? borderColor;
+  final double? verticalPadding;
   const AppCardWidget({
     super.key,
     required this.cardWidget,
     this.onTap,
     this.borderColor,
+    this.verticalPadding,
   });
 
   @override
@@ -21,7 +23,7 @@ class AppCardWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(
-          vertical: AppConstants.padding * 1.5,
+          vertical: verticalPadding ?? AppConstants.padding * 1.5,
           horizontal: AppConstants.padding,
         ),
         decoration: BoxDecoration(

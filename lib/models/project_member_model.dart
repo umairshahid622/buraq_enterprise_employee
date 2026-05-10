@@ -22,4 +22,8 @@ class ProjectMember {
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate(),
     );
   }
-}
+
+  static List<ProjectMember> fromQuerySnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) => ProjectMember.fromSnapshot(doc)).toList();
+  }
+}   

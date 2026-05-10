@@ -32,4 +32,16 @@ class AllocatedAmountModel {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
   }
+
+
+  Map<String, dynamic> toJson() {
+    return {
+      'allocateBy': allocatedBy,
+      'amount': amount,
+      'createdAt': createdAt,
+      'employeeId': employeeId,
+      'projectId': projectId,
+      'updatedAt': updatedAt,
+    };
+  }
 }

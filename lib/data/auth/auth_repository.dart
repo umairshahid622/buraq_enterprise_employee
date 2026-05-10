@@ -1,4 +1,4 @@
-import 'package:buraq_enterprise_employee/core/controllers/auth_helper.dart';
+import 'package:buraq_enterprise_employee/utils/auth_helper.dart';
 import 'package:buraq_enterprise_employee/data/auth/employee_repository.dart';
 import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';

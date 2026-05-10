@@ -3,14 +3,18 @@ import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
 import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:buraq_enterprise_employee/utils/app_util.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 abstract class BaseController extends GetxController {
+
+  final RxBool isLoading = false.obs;
   Future<T?> safeCall<T>(
     Future<T> Function() action, {
     VoidCallback? onStart,
     VoidCallback? onComplete,
   }) async {
+    isLoading.value = true;
     onStart?.call();
     try {
       return await action();
@@ -21,6 +25,7 @@ abstract class BaseController extends GetxController {
       
     } finally {
       onComplete?.call();
+      isLoading.value = false;
     }
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -65,3 +64,35 @@ class AppTextBody extends StatelessWidget {
   }
 }
 
+class AppRichText extends StatelessWidget {
+  const AppRichText({super.key, required this.text1, required this.text2});
+
+  final String text1;
+  final String text2;
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        text: text1 ,
+        style: GoogleFonts.inter(
+          fontSize: 14,
+          height: 1.5,
+          fontWeight: FontWeight.w400,
+          color: context.appColors.secondary,
+        ),
+        children: <TextSpan>[
+          TextSpan(
+            text: text2,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              height: 1.5,
+              fontWeight: FontWeight.w400,
+              color: context.appColors.text,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
