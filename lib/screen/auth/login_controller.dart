@@ -32,13 +32,11 @@ class LoginController extends BaseController {
     if (!formKey.currentState!.validate()) {
       return;
     }
-    loading.value = true;
     await safeCall(
       () => AuthRepository().verifyPhoneNumber(
         phoneNumber: phoneNumberController.text,
         onCodeSent: (verId) {
           _verificationId = verId;
-          loading.value = false;
           onCodeSent?.call(verId);
         },
       ),

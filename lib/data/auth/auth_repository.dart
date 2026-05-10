@@ -1,6 +1,8 @@
+import 'package:buraq_enterprise_employee/core/controllers/auth_helper.dart';
 import 'package:buraq_enterprise_employee/data/auth/employee_repository.dart';
 import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
 
 class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -10,71 +12,74 @@ class AuthRepository {
     required String phoneNumber,
     required Function(String verId) onCodeSent,
   }) async {
-    try {
-      // Standardize the Pakistani number format
-      String formattedPhone = AppHelper.getFormattedPhoneNumber(
-        phoneNumber: phoneNumber,
-      );
-      bool adminExist = await _employeeRepository.checkAdminExist(
-        phoneNumber: formattedPhone,
-      );
+    final completer = Completer<void>();
 
-      if (adminExist) {
-        String error = AppHelper.getFirebaseErrorMessage(
-          message: "Your account is not active. Please contact admin.",
-        );
-        throw Exception(error);
-      }
+    // ✅ format and validate first
+    final formattedPhone = AppHelper.getFormattedPhoneNumber(
+      phoneNumber: phoneNumber,
+    );
 
-      await _auth.verifyPhoneNumber(
+    // ✅ FirestoreHelper is inside EmployeeRepository already
+    final adminExist = await _employeeRepository.checkAdminExist(
+      phoneNumber: formattedPhone,
+    );
+
+    if (adminExist) {
+      throw Exception('This number is registered as an admin account.');
+    }
+
+    // ✅ wrap Auth call in AuthHelper
+    await AuthHelper.call(() async {
+      _auth.verifyPhoneNumber(
         phoneNumber: formattedPhone,
         verificationCompleted: (PhoneAuthCredential credential) async {
           await _auth.signInWithCredential(credential);
+          if (!completer.isCompleted) completer.complete();
         },
         verificationFailed: (FirebaseAuthException e) {
-          throw Exception(
-            AppHelper.getFirebaseErrorMessage(message: e.toString()),
-          );
+          if (!completer.isCompleted) {
+            completer.completeError(
+              Exception(
+                AppHelper.getFirebaseErrorMessage(message: e.code),
+              ),
+            );
+          }
         },
         codeSent: (String verId, int? resendToken) {
           onCodeSent(verId);
+          if (!completer.isCompleted) completer.complete();
         },
-        codeAutoRetrievalTimeout: (String verId) {},
+        codeAutoRetrievalTimeout: (String verId) {
+          if (!completer.isCompleted) completer.complete();
+        },
       );
-    } catch (e) {
-      throw Exception(AppHelper.getFirebaseErrorMessage(message: e.toString()));
-    }
+
+      await completer.future;
+    });
   }
 
-  // Final Sign In
-  Future<UserCredential> signInWithOtp(String verId, String smsCode) async {
-    try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+  Future<UserCredential> signInWithOtp(
+    String verId,
+    String smsCode,
+  ) async {
+    // ✅ wrap in AuthHelper — no manual try/catch
+    return await AuthHelper.call(() async {
+      final credential = PhoneAuthProvider.credential(
         verificationId: verId,
         smsCode: smsCode,
       );
-      UserCredential userCredential = await _auth.signInWithCredential(
-        credential,
-      );
 
+      final userCredential = await _auth.signInWithCredential(credential);
+
+      // ✅ FirestoreHelper is inside initializeRecord already
       await _employeeRepository.initializeRecord(userCredential.user);
 
       return userCredential;
-    } on FirebaseAuthException {
-      // Re-throw Firebase Auth exceptions so they can be handled upstream
-      rethrow;
-    } catch (e) {
-      // Wrap other exceptions
-      throw Exception("Sign in failed: $e");
-    }
+    });
   }
 
   Future<void> signOut() async {
-    try {
-      await Future.delayed(const Duration(seconds: 1));
-      await _auth.signOut();
-    } catch (e) {
-      throw Exception("Logout Failed: $e");
-    }
+    // ✅ wrap in AuthHelper
+    await AuthHelper.call(() => _auth.signOut());
   }
 }
