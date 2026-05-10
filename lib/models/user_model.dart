@@ -1,5 +1,5 @@
 class UserModel {
-  final String empeId;
+  final String empId;
   final String firstName;
   final String lastName;
   final String phoneNumber;
@@ -11,7 +11,7 @@ class UserModel {
   final String updatedBy;
 
   const UserModel({
-    required this.empeId,
+    required this.empId,
     required this.firstName,
     required this.lastName,
     required this.phoneNumber,
@@ -25,7 +25,7 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      empeId: map['empeId'] ?? '',
+      empId: map['empId'] ?? '',
       firstName: map['first_name'] ?? '',
       lastName: map['last_name'] ?? '',
       phoneNumber: map['phone'] ?? '',
@@ -38,5 +38,20 @@ class UserModel {
     );
   }
 
-  bool get isEmpty => empeId.isEmpty;
+  factory UserModel.empty() {
+    return const UserModel(
+      empId: '',
+      firstName: '',
+      lastName: '',
+      phoneNumber: '',
+      role: '',
+      status: '',
+      createdAt: '',
+      createdBy: '',
+      updatedAt: '',
+      updatedBy: '',
+    );
+  }
+
+  bool get isEmpty => empId.isEmpty;
 }

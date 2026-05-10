@@ -3,7 +3,7 @@ import 'package:buraq_enterprise_employee/core/config/colors/app_color_scheme.da
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
-import 'package:buraq_enterprise_employee/utils/app_util.dart';
+import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -143,11 +143,11 @@ class _AppTextFieldState extends State<AppTextField> {
       onChanged: widget.onTextChangeCallBack,
       validator: (value) {
         if (widget.type == TextFieldType.phoneNumber) {
-          return AppUtils.phoneNumberValidator(value: value ?? "");
+          return AppHelper.phoneNumberValidator(value: value ?? "");
         } else if (widget.type == TextFieldType.text) {
-          return AppUtils.textValidator(value: value ?? "");
+          return AppHelper.textValidator(value: value ?? "");
         } else if (widget.type == TextFieldType.amount) {
-          return AppUtils.amountValidator(value: int.tryParse(value ?? ""));
+          return AppHelper.amountValidator(value: int.tryParse(value ?? ""));
         } else if (widget.type == TextFieldType.otp) {
           // 👇 otp validation — empty string hides error text but still blocks submit
           if (value == null || value.isEmpty) return '';

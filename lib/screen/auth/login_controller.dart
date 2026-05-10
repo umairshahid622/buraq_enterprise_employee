@@ -2,6 +2,7 @@
 import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
 import 'package:buraq_enterprise_employee/data/auth/auth_repository.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/common/user_controller.dart';
+import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:buraq_enterprise_employee/utils/app_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -46,7 +47,7 @@ class LoginController extends GetxController {
       );
     } catch (e) {
       loading.value = false;
-      String error = AppUtils.getFirebaseErrorMessage(message: e.toString());
+      String error = AppHelper.getFirebaseErrorMessage(message: e.toString());
       print(error); // Debug print
       AppUtils.showToast(
         label: error,
@@ -70,7 +71,7 @@ class LoginController extends GetxController {
       final userController = Get.find<UserController>();
       await userController.fetchUserProfile();
     } catch (e) {
-      String error = AppUtils.getFirebaseErrorMessage(message: e.toString());
+      String error = AppHelper.getFirebaseErrorMessage(message: e.toString());
       AppUtils.showToast(
         label: error,
         vairant: ToastVariants.error,

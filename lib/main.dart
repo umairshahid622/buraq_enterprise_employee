@@ -5,6 +5,7 @@ import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
 import 'package:buraq_enterprise_employee/firebase_options.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/common/theme_controller.dart';
+import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:buraq_enterprise_employee/utils/app_util.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   } catch (e) {
-    String error = AppUtils.getFirebaseErrorMessage(message: e.toString());
+    String error = AppHelper.getFirebaseErrorMessage(message: e.toString());
     AppUtils.showToast(label: error,vairant: ToastVariants.error);
   }
   await GetStorage.init();

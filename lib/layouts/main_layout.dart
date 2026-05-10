@@ -1,4 +1,3 @@
-
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
@@ -34,23 +33,23 @@ class _MainLayoutState extends State<MainLayout> {
 
   void _updateTitles() {
     final location = GoRouterState.of(context).uri.toString();
-    final mainRoutes = ['/home', '/employees', '/projects', '/profile'];
+    final mainRoutes = ['/home', '/add-expense', '/returns', '/profile'];
     _isNestedRoute = !mainRoutes.contains(location);
 
     final titles = {
-      "/home": {
-        "heading": "Dashboard",
-        "subHeading": "Company-wide overview and analytics",
+      mainRoutes[0]: {
+        "heading": "Welcome Back",
+        "subHeading": "Here's your expense overview",
       },
-      "/add-expense": {
-        "heading": "Employees",
-        "subHeading": "Manage your team members",
+      mainRoutes[1]: {
+        "heading": "Add Expense",
+        "subHeading": "Record your purchase details",
       },
-      "/returns": {
-        "heading": "Projects",
-        "subHeading": "Manage budgets and teams",
+      mainRoutes[2]: {
+        "heading": "Returns & Refunds",
+        "subHeading": "Return unused materials to shopkeeper",
       },
-      "/profile": {
+      mainRoutes[3]: {
         "heading": "Profile & Settings",
         "subHeading": "Manage your account preferences",
       },
@@ -98,7 +97,9 @@ class _MainLayoutState extends State<MainLayout> {
               text: _heading,
               fontSize: AppConstants.mainHeadingFontSize,
             ),
-            _subHeading != null ? const SizedBox(height: 2.5) : const SizedBox.shrink(),
+            _subHeading != null
+                ? const SizedBox(height: 2.5)
+                : const SizedBox.shrink(),
             _subHeading != null
                 ? AppTextBody(
                     text: _subHeading!,
@@ -127,15 +128,15 @@ class _MainLayoutState extends State<MainLayout> {
       currentIndex: widget.navigationShell.currentIndex,
       onTap: onItemTapped,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.maps_home_work_outlined), label: 'Home'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.maps_home_work_outlined),
+          label: 'Home',
+        ),
         BottomNavigationBarItem(
           icon: Icon(Icons.add_circle_outline),
           label: 'Add Expense',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.refresh),
-          label: 'Returns',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.refresh), label: 'Returns'),
         BottomNavigationBarItem(
           icon: Icon(Icons.account_circle_outlined),
           label: 'Profile',

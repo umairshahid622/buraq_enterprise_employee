@@ -41,15 +41,16 @@ class EmployeeRepository {
     if (user == null) return null;
 
     try {
-      final doc = await _firestore
+      final query = await _firestore
           .collection(collectionPath)
-          .doc(user.uid)
+          .where('uid', isEqualTo: user.uid)
+          .limit(1)
           .get()
           .timeout(const Duration(seconds: 10));
 
-      if (!doc.exists || doc.data() == null) return null;
+      if (query.docs.isEmpty) return null;
 
-      return UserModel.fromMap(doc.data()!);
+      return UserModel.fromMap(query.docs.first.data());
     } on FirebaseException catch (e) {
       if (e.code == 'permission-denied') rethrow;
       return null;

@@ -1,5 +1,5 @@
 import 'package:buraq_enterprise_employee/data/auth/employee_repository.dart';
-import 'package:buraq_enterprise_employee/utils/app_util.dart';
+import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepository {
@@ -12,7 +12,7 @@ class AuthRepository {
   }) async {
     try {
       // Standardize the Pakistani number format
-      String formattedPhone = AppUtils.getFormattedPhoneNumber(
+      String formattedPhone = AppHelper.getFormattedPhoneNumber(
         phoneNumber: phoneNumber,
       );
       bool adminExist = await _employeeRepository.checkAdminExist(
@@ -20,7 +20,7 @@ class AuthRepository {
       );
 
       if (adminExist) {
-        String error = AppUtils.getFirebaseErrorMessage(
+        String error = AppHelper.getFirebaseErrorMessage(
           message: "Your account is not active. Please contact admin.",
         );
         throw Exception(error);
@@ -33,7 +33,7 @@ class AuthRepository {
         },
         verificationFailed: (FirebaseAuthException e) {
           throw Exception(
-            AppUtils.getFirebaseErrorMessage(message: e.toString()),
+            AppHelper.getFirebaseErrorMessage(message: e.toString()),
           );
         },
         codeSent: (String verId, int? resendToken) {
@@ -42,7 +42,7 @@ class AuthRepository {
         codeAutoRetrievalTimeout: (String verId) {},
       );
     } catch (e) {
-      throw Exception(AppUtils.getFirebaseErrorMessage(message: e.toString()));
+      throw Exception(AppHelper.getFirebaseErrorMessage(message: e.toString()));
     }
   }
 

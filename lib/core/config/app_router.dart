@@ -6,7 +6,7 @@ import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/layouts/auth_layout.dart';
 import 'package:buraq_enterprise_employee/layouts/main_layout.dart';
 import 'package:buraq_enterprise_employee/screen/auth/login_screen.dart';
-import 'package:buraq_enterprise_employee/screen/widgets/add_expense_screen_widget/add_expense_screen_widget.dart';
+import 'package:buraq_enterprise_employee/screen/widgets/add_expense/add_expense_screen_widget.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/home/home_screen_widget.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/profile/profile_screen_widget.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/returns/returns_screen_widget.dart';
@@ -63,7 +63,7 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/projects',
+              path: '/returns',
               pageBuilder: (context, state) =>
                   NoTransitionPage(child: ReturnsScreenWidget()),
               
