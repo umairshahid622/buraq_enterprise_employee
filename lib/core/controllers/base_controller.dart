@@ -9,14 +9,17 @@ abstract class BaseController extends GetxController {
   final RxBool isLoading = false.obs;
   Future<T?> safeCall<T>(Future<T> Function() action) async {
     isLoading.value = true;
+    update();
     try {
       return await action();
     } catch (e) {
+      print(e);
       String error = AppHelper.getFirebaseErrorMessage(message: e.toString());
       AppUtils.showToast(label: error, variant: ToastVariants.error);
       return null;
     } finally {
       isLoading.value = false;
+      update();
     }
   }
 }

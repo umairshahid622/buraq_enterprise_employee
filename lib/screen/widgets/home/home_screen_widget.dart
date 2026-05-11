@@ -8,7 +8,7 @@ import 'package:buraq_enterprise_employee/utils/widgets/app_scroll_body.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/buttons/app_text_button.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:get/get.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreenWidget extends StatelessWidget {
@@ -18,7 +18,7 @@ class HomeScreenWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<HomeScreenController>(
       init: HomeScreenController(),
-      dispose: (controller) => controller.dispose(),
+      dispose: (state) => Get.delete<HomeScreenController>(),
       builder: (controller) {
         int allocatedBalance = controller.allocatedAmount.toInt();
         int spentBalance = controller.spentAmount.toInt();
@@ -36,13 +36,13 @@ class HomeScreenWidget extends StatelessWidget {
                   spentBalance,
                 ),
                 SizedBox(height: AppConstants.commonVerticalSpacing),
-                Row(
+                controller.projects.isNotEmpty ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     AppTextHeading(text: "My Projects", fontSize: 16),
                     AppTextButton(buttonText: "View All"),
                   ],
-                ),
+                ): SizedBox.shrink(),
                 SizedBox(height: AppConstants.commonVerticalSpacing / 2),
                 ListView.separated(
                   shrinkWrap: true,
@@ -140,6 +140,9 @@ class HomeScreenWidget extends StatelessWidget {
     int spentBalance,
   ) {
     return AppCardWidget(
+      onTap: (){
+        print(availaibleBalance);
+      },
       cardWidget: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -21,7 +21,7 @@ class ProfileScreenController extends GetxController {
 
   UserModel get user {
     try {
-      return _userController.user ?? UserModel.empty();
+      return _userController.userRx.value  ?? UserModel.empty();
     } catch (e) {
       Get.log('Error getting user: $e');
       return UserModel.empty();

@@ -12,10 +12,12 @@ class UserController extends BaseController {
 
   final Rx<UserModel?> _user = Rx<UserModel?>(null);
 
+  /// Public getter for reactive user
+  Rx<UserModel?> get userRx => _user;
+
   /// Public getter
   UserModel? get user => _user.value;
-
-  bool get isLoggedIn => user != null;
+  
 
   @override
   void onInit() {

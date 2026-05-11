@@ -5,6 +5,7 @@ import 'package:buraq_enterprise_employee/data/common/project_member_repository.
 import 'package:buraq_enterprise_employee/data/screens/project_repository.dart';
 import 'package:buraq_enterprise_employee/models/allocated_amount_model.dart';
 import 'package:buraq_enterprise_employee/models/project_model.dart';
+import 'package:buraq_enterprise_employee/models/user_model.dart';
 import 'package:get/get.dart';
 
 class HomeScreenController extends BaseController {
@@ -15,7 +16,7 @@ class HomeScreenController extends BaseController {
       ProjectMemberRepository();
   final ProjectRepository _projectRepo = ProjectRepository();
   //controllers
-  final UserController _userController = Get.find<UserController>();
+  late final UserController _userController;
 
   //variables
   double _totalAllocatedAmount = 0.0;
@@ -29,11 +30,25 @@ class HomeScreenController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-    fetchHomeScreenData();
+    _userController = Get.find<UserController>();
+
+    if (_userController.user?.empId.isNotEmpty == true) {
+      fetchHomeScreenData();
+      return;
+    }
+
+    isLoading.value = true;
+    update();
+
+    ever<UserModel?>(_userController.userRx, (UserModel? user) {
+      if (user != null && user.empId.isNotEmpty) {
+        fetchHomeScreenData();
+      }
+    });
   }
 
   Future<void> fetchHomeScreenData() async {
-    final empId = _userController.user?.empId;
+    final empId = _userController.userRx.value?.empId;
     if (empId == null || empId.isEmpty) return;
 
     final results = await safeCall(
@@ -72,6 +87,7 @@ class HomeScreenController extends BaseController {
 
   double get allocatedAmount => _totalAllocatedAmount;
   double get spentAmount => _spentAmount;
+  List<ProjectModel> get projects => _projects;
 
   List<ProjectWithBudget> get projectsWithBudget => _projectsWithBudget;
 }

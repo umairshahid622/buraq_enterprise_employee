@@ -38,7 +38,7 @@ class AppUtils {
     required ToastVariants variant,
   }) {
     final scaffoldState = AppConstants.scaffoldMessengerKey.currentState;
-    if (scaffoldState == null) return;
+    if (scaffoldState == null || !scaffoldState.mounted) return;
     final context = scaffoldState.context;
     final Color backgroundColor;
     switch (variant) {
