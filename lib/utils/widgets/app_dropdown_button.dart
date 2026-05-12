@@ -1,16 +1,17 @@
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
-import 'package:buraq_enterprise_employee/utils/classes/app_dropdown_button_class.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
-class AppDropdownButton extends StatelessWidget {
+class AppDropdownButton<T, V> extends StatelessWidget {
   const AppDropdownButton({
     super.key,
-    required this.items,
-    required this.valueNotifier,
+    required this.items, // The list of any objects
+    required this.valueNotifier, // Notifier for the selected ID
     required this.onChanged,
+    required this.itemLabel, // Function to tell us what text to show
+    required this.itemValue, // Function to tell us which field is the ID
     required this.hint,
     this.height,
     required this.enabled,
@@ -19,34 +20,38 @@ class AppDropdownButton extends StatelessWidget {
     this.label,
   });
 
-  final List<AppDropdownButtonClass> items;
-  final ValueNotifier<String?> valueNotifier;
-  final void Function(String? value) onChanged;
+  final List<T> items;
+  final ValueNotifier<V?> valueNotifier;
+  final void Function(V? value) onChanged;
+  final String Function(T item) itemLabel; // Extracts display text
+  final V Function(T item) itemValue; // Extracts the ID/Value
+
   final String hint;
   final double? height;
   final bool enabled;
   final Color? buttonBackgroundColor;
   final Color? dropdownBackgroundColor;
-
   final String? label;
 
   @override
   Widget build(BuildContext context) {
     final appColors = context.appColors;
-    final DropdownButtonHideUnderline dropDown = DropdownButtonHideUnderline(
-      child: DropdownButton2<String>(
+
+    final dropDown = DropdownButtonHideUnderline(
+      child: DropdownButton2<V>(
+        // V is the type of the ID (usually String)
         isExpanded: true,
         valueListenable: valueNotifier,
         hint: AppTextBody(text: hint, color: appColors.secondary),
-        items: items.map((item) {
-          return DropdownItem<String>(
-            value: item.id,
-            child: AppTextBody(text: item.label),
+        items: items.map((T item) {
+          return DropdownItem<V>(
+            value: itemValue(item), // Dynamic ID
+            child: AppTextBody(text: itemLabel(item)), // Dynamic Label
           );
         }).toList(),
         selectedItemBuilder: (context) {
-          return items.map((item) {
-            return AppTextBody(text: item.label);
+          return items.map((T item) {
+            return AppTextBody(text: itemLabel(item));
           }).toList();
         },
         onChanged: enabled ? onChanged : null,

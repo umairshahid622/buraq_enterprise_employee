@@ -122,7 +122,7 @@ class _AppTextFieldState extends State<AppTextField> {
         break;
       default:
         keyBoardType = TextInputType.text;
-        defaultPrefixIcon = const Icon(Icons.edit_note_rounded);
+        defaultPrefixIcon = const Icon(Icons.edit);
         inputFormatters = [];
         break;
     }

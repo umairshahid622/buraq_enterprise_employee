@@ -5,7 +5,6 @@ import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/buttons/theme_toggle_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -85,8 +84,7 @@ class _MainLayoutState extends State<MainLayout> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: AppConstants.appBarHight,
+      appBar: AppBar(        
         leading: _isNestedRoute
             ? IconButton(
                 icon: const Icon(Icons.arrow_back_ios_new_rounded),

@@ -19,8 +19,7 @@ class EmployeeRepository {
           .get(),
     );
 
-    if (query.docs.isEmpty)
-      throw Exception('No employee record found for this phone number');
+    if (query.docs.isEmpty)  throw Exception('No employee record found for this phone number');
     final employeeDoc = query.docs.first;
     if (employeeDoc.data()['uid'] == null) {
       await employeeDoc.reference.update({

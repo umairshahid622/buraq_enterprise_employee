@@ -3,12 +3,6 @@ import 'package:buraq_enterprise_employee/screen/controllers/common/project_cont
 
 class HomeScreenController extends ProjectController {
   
-
-  @override
-  void onInit() {
-    super.onInit();
-   
-  }
   
 }
 

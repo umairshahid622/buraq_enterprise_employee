@@ -21,6 +21,8 @@ class AppTextButton extends StatelessWidget {
     final AppColorScheme appColorScheme = context.appColors;
     return TextButton(
       style: ButtonStyle(
+        visualDensity: VisualDensity.compact,
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         textStyle: WidgetStatePropertyAll(
           GoogleFonts.inter(
             color: appColorScheme.primary,

@@ -34,7 +34,7 @@ class ProjectController extends BaseController {
     _userController = Get.find<UserController>();
 
     if (_userController.user?.empId.isNotEmpty == true) {
-      fetchHomeScreenData();
+      fetchData();
       return;
     }
 
@@ -43,12 +43,12 @@ class ProjectController extends BaseController {
 
     ever<UserModel?>(_userController.userRx, (UserModel? user) {
       if (user != null && user.empId.isNotEmpty) {
-        fetchHomeScreenData();
+        fetchData();
       }
     });
   }
 
-  Future<void> fetchHomeScreenData() async {
+  Future<void> fetchData() async {
     final empId = _userController.userRx.value?.empId;
     if (empId == null || empId.isEmpty) return;
 
