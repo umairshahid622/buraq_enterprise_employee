@@ -1,6 +1,6 @@
 enum Status { active, inactive, completed }
 
-enum TextFieldType { email, password, text, phoneNumber, otp, amount }
+enum TextFieldType { email, password, text, phoneNumber, otp, amount, notes }
 
 enum AuthStatus { initial, authenticated, unauthenticated }
 

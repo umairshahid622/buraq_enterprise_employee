@@ -28,6 +28,7 @@ class AppTextField extends StatefulWidget {
   final String? counterText;
   final FontWeight? fontWeight;
   final FocusNode? focusNode;
+  final int? maxLines;
   final Function(String value)? onTextChangeCallBack;
   final Function()? onTapCallBack;
   final Function(KeyEvent event)? onKeyEvent; // 👈 add this
@@ -54,7 +55,7 @@ class AppTextField extends StatefulWidget {
     this.counterText,
     this.fontWeight,
     this.focusNode,
-    this.onKeyEvent,
+    this.onKeyEvent, this.maxLines,
   });
 
   @override
@@ -113,6 +114,11 @@ class _AppTextFieldState extends State<AppTextField> {
           LengthLimitingTextInputFormatter(11),
         ];
         defaultPrefixIcon = const Icon(Icons.phone);
+        break;      
+       case TextFieldType.notes:
+        keyBoardType = TextInputType.multiline;
+        inputFormatters = [];
+        defaultPrefixIcon = null;
         break;
       default:
         keyBoardType = TextInputType.text;
@@ -124,6 +130,7 @@ class _AppTextFieldState extends State<AppTextField> {
     final AppColorScheme appColorScheme = context.appColors;
 
     Widget textField = TextFormField(
+      maxLines: widget.maxLines,
       inputFormatters: inputFormatters,
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();

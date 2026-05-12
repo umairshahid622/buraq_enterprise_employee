@@ -1,8 +1,11 @@
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/common/project_controller.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/buttons/theme_toggle_button.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,15 +20,12 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   String _heading = '';
   String? _subHeading;
-  bool _isNestedRoute = false;
-
-  
-
+  bool _isNestedRoute = false;  
   
   @override
   void initState() {   
     super.initState();
-    
+     Get.put<ProjectController>(ProjectController());
   }
 
   @override

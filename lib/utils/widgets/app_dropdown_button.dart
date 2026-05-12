@@ -1,4 +1,3 @@
-
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/utils/classes/app_dropdown_button_class.dart';
@@ -17,6 +16,7 @@ class AppDropdownButton extends StatelessWidget {
     required this.enabled,
     this.buttonBackgroundColor,
     this.dropdownBackgroundColor,
+    this.label,
   });
 
   final List<AppDropdownButtonClass> items;
@@ -28,12 +28,13 @@ class AppDropdownButton extends StatelessWidget {
   final Color? buttonBackgroundColor;
   final Color? dropdownBackgroundColor;
 
+  final String? label;
+
   @override
   Widget build(BuildContext context) {
     final appColors = context.appColors;
-    return DropdownButtonHideUnderline(
+    final DropdownButtonHideUnderline dropDown = DropdownButtonHideUnderline(
       child: DropdownButton2<String>(
-        
         isExpanded: true,
         valueListenable: valueNotifier,
         hint: AppTextBody(text: hint, color: appColors.secondary),
@@ -59,7 +60,7 @@ class AppDropdownButton extends StatelessWidget {
           ),
         ),
         dropdownStyleData: DropdownStyleData(
-          
+          offset: const Offset(0, -5),
           elevation: 1,
           decoration: BoxDecoration(
             color: dropdownBackgroundColor ?? appColors.chipColor,
@@ -72,5 +73,23 @@ class AppDropdownButton extends StatelessWidget {
         ),
       ),
     );
+
+    if (label != null || label!.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppConstants.textFieldLabelMargin,
+            ),
+            child: AppTextHeading(text: label!, fontSize: 14),
+          ),
+          SizedBox(height: AppConstants.textFieldLabelMarginVertical),
+          dropDown,
+        ],
+      );
+    } else {
+      return dropDown;
+    }
   }
 }

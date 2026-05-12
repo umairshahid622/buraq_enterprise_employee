@@ -25,7 +25,6 @@ class HomeScreenWidget extends StatelessWidget {
         int availaibleBalance = allocatedBalance - spentBalance;
         return Skeletonizer(
           enabled: controller.isLoading.value,
-
           child: AppScrollableBody(
             child: Column(
               children: [
@@ -36,95 +35,122 @@ class HomeScreenWidget extends StatelessWidget {
                   spentBalance,
                 ),
                 SizedBox(height: AppConstants.commonVerticalSpacing),
-                controller.projects.isNotEmpty ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AppTextHeading(text: "My Projects", fontSize: 16),
-                    AppTextButton(buttonText: "View All"),
-                  ],
-                ): SizedBox.shrink(),
-                SizedBox(height: AppConstants.commonVerticalSpacing / 2),
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: controller.projectsWithBudget.length,
-                  itemBuilder: (context, index) {
-                    final project =
-                        controller.projectsWithBudget[index].project;
-                    final allocatedAmount =
-                        controller.projectsWithBudget[index].allocatedAmount;
-                    final totalBudget = allocatedAmount?.amount.toInt() ?? 0;
-                    final spentBudget = 300;
-                    final leftBudget = totalBudget - spentBudget;
-                    final double progressValue = AppHelper.calculatePercentage(
-                      spentBudget,
-                      totalBudget,
-                    );
-                    return AppCardWidget(
-                      verticalPadding: AppConstants.padding,
-                      cardWidget: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                controller.projectsWithBudget.isNotEmpty
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Flexible(
-                                child: AppTextHeading(
-                                  text: project.projectName,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              SizedBox(
-                                width: AppConstants.commonHorizontalSpacing,
-                              ),
-                              AppUtils.statusContainer(
-                                context: context,
-                                status: project.status,
-                              ),
-                            ],
-                          ),
-                          AppTextBody(text: project.projectId, fontSize: 14),
-                          SizedBox(height: AppConstants.commonVerticalSpacing),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AppTextBody(text: "Budget Used"),
-                              AppTextBody(
-                                text: '$progressValue%',
-                                color: context.appColors.text,
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: AppConstants.commonVerticalSpacing / 4,
-                          ),
-                          LinearProgressIndicator(
-                            borderRadius: BorderRadius.circular(12),
-                            value: progressValue / 100,
-                            minHeight: 6.5,
-                            backgroundColor: context.appColors.borderColor,
-                          ),
-                          SizedBox(
-                            height: AppConstants.commonVerticalSpacing / 4,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AppTextBody(text: "${AppHelper.formatPKR(spentBudget)} Spent"),
-                              AppTextBody(
-                                text: '${AppHelper.formatPKR(leftBudget)} Left',
-                                color: context.appColors.colorGreen,
-                              ),
-                            ],
-                          ),
+                          AppTextHeading(text: "My Projects", fontSize: 16),
+                          AppTextButton(buttonText: "View All"),
                         ],
+                      )
+                    : SizedBox.shrink(),
+                 controller.projectsWithBudget.isNotEmpty ? SizedBox(height: AppConstants.commonVerticalSpacing / 2) : SizedBox.shrink(),
+                controller.projectsWithBudget.isEmpty
+                    ? AppUtils.noDataFound(
+                        context: context,
+                        heading: "No projects available",
+                        subHeading: "Ask you admin to assign you a project",
+                      )
+                    : ListView.separated(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: controller.projectsWithBudget.length,
+                        itemBuilder: (context, index) {
+                          final project =
+                              controller.projectsWithBudget[index].project;
+                          final allocatedAmount = controller
+                              .projectsWithBudget[index]
+                              .allocatedAmount;
+                          final totalBudget =
+                              allocatedAmount?.amount.toInt() ?? 0;
+                          final spentBudget = 300;
+                          final leftBudget = totalBudget - spentBudget;
+                          final double progressValue =
+                              AppHelper.calculatePercentage(
+                                spentBudget,
+                                totalBudget,
+                              );
+                          return AppCardWidget(
+                            verticalPadding: AppConstants.padding,
+                            cardWidget: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Flexible(
+                                      child: AppTextHeading(
+                                        text: project.projectName,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width:
+                                          AppConstants.commonHorizontalSpacing,
+                                    ),
+                                    AppUtils.statusContainer(
+                                      context: context,
+                                      status: project.status,
+                                    ),
+                                  ],
+                                ),
+                                AppTextBody(
+                                  text: project.projectId,
+                                  fontSize: 14,
+                                ),
+                                SizedBox(
+                                  height: AppConstants.commonVerticalSpacing,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    AppTextBody(text: "Budget Used"),
+                                    AppTextBody(
+                                      text: '$progressValue%',
+                                      color: context.appColors.text,
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height:
+                                      AppConstants.commonVerticalSpacing / 4,
+                                ),
+                                LinearProgressIndicator(
+                                  borderRadius: BorderRadius.circular(12),
+                                  value: progressValue / 100,
+                                  minHeight: 6.5,
+                                  backgroundColor:
+                                      context.appColors.borderColor,
+                                ),
+                                SizedBox(
+                                  height:
+                                      AppConstants.commonVerticalSpacing / 4,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    AppTextBody(
+                                      text:
+                                          "${AppHelper.formatPKR(spentBudget)} Spent",
+                                    ),
+                                    AppTextBody(
+                                      text:
+                                          '${AppHelper.formatPKR(leftBudget)} Left',
+                                      color: context.appColors.colorGreen,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: AppConstants.commonVerticalSpacing,
+                        ),
                       ),
-                    );
-                  },
-                  separatorBuilder: (context, index) => SizedBox(
-                    height: AppConstants.commonVerticalSpacing,
-                  ),
-                ),
               ],
             ),
           ),
@@ -140,7 +166,7 @@ class HomeScreenWidget extends StatelessWidget {
     int spentBalance,
   ) {
     return AppCardWidget(
-      onTap: (){
+      onTap: () {
         print(availaibleBalance);
       },
       cardWidget: Column(
