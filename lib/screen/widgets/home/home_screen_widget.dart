@@ -1,7 +1,7 @@
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/models/add_expense_model.dart';
-import 'package:buraq_enterprise_employee/screen/controllers/home/home_screen_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/common/main_layout_controller.dart';
 import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:buraq_enterprise_employee/utils/app_util.dart';
 import 'package:buraq_enterprise_employee/utils/classes/project_with_budget.dart';
@@ -18,9 +18,8 @@ class HomeScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomeScreenController>(
-      init: HomeScreenController(),
-      dispose: (state) => Get.delete<HomeScreenController>(),
+    return GetBuilder<MainLayoutDataController>(
+      init: MainLayoutDataController(),
       builder: (controller) {
         int allocatedBalance = controller.allocatedAmount.toInt();
         int spentBalance = controller.spentAmount.toInt();
@@ -148,7 +147,7 @@ class HomeScreenWidget extends StatelessWidget {
     );
   }
 
-  ListView projectList(HomeScreenController controller) {
+  ListView projectList(MainLayoutDataController controller) {
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),

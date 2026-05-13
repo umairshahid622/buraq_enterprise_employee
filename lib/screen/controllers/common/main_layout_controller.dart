@@ -37,17 +37,21 @@ class MainLayoutDataController extends BaseController {
     super.onInit();
     _userController = Get.find<UserController>();
 
+    print("user at onInit: ${_userController.user?.empId}"); // 👈
+
     if (_userController.user?.empId.isNotEmpty == true) {
+      print("taking early path"); // 👈
       fetchData();
       return;
     }
 
-    isLoading.value = true;
-    update();
-
-    ever<UserModel?>(_userController.userRx, (UserModel? user) {
+    print("registering ever()"); // 👈
+    Worker? worker;
+    worker = ever<UserModel?>(_userController.userRx, (UserModel? user) {
+      print("ever fired: ${user?.empId}"); // 👈
       if (user != null && user.empId.isNotEmpty) {
         fetchData();
+        worker?.dispose();
       }
     });
   }
@@ -69,7 +73,8 @@ class MainLayoutDataController extends BaseController {
       _allocatedAmounts = list;
       _totalAllocatedAmount = total;
 
-      final (expenseList, totalExpense) = results[1] as (List<AddExpenseModel>, double);
+      final (expenseList, totalExpense) =
+          results[1] as (List<AddExpenseModel>, double);
       _expenses = expenseList;
       _spentAmount = totalExpense;
 

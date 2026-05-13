@@ -1,7 +1,7 @@
-import 'package:buraq_enterprise_employee/screen/controllers/common/main_layout_controller.dart';
+import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart';
 
 
-class HomeScreenController extends MainLayoutDataController {
+class HomeScreenController extends BaseController {
   
   
 }

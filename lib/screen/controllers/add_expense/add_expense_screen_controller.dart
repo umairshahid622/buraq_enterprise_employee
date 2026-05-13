@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
+import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart';
 import 'package:buraq_enterprise_employee/data/screens/add_expense_repository.dart';
 import 'package:buraq_enterprise_employee/models/project_model.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/common/main_layout_controller.dart';
@@ -11,8 +12,16 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class AddExpenseScreenController extends MainLayoutDataController {
+class AddExpenseScreenController extends BaseController {
+  late final MainLayoutDataController _dataController;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  void onInit() {
+    super.onInit();
+    _dataController =
+        Get.find<MainLayoutDataController>();
+  }
 
   final TextEditingController itemNameController = TextEditingController();
   final TextEditingController itemQuantityController = TextEditingController();
@@ -85,7 +94,7 @@ class AddExpenseScreenController extends MainLayoutDataController {
         itemQuantity: int.parse(itemQuantityController.text.trim()),
         unitPrice: int.parse(unitPriceController.text.trim()),
         additionalNotes: additionalNotesController.text.trim(),
-        employeeId: user!.empId,
+        employeeId: _dataController.user!.empId,
         projectId: projectNotifier.value!.projectId,
         projectName: projectNotifier.value!.projectName,
         receipt: selectedImage.value!,
@@ -120,6 +129,10 @@ class AddExpenseScreenController extends MainLayoutDataController {
     selectedImage.value = null;
     update();
   }
+
+  List<ProjectModel> get projects=>_dataController.projects;
+
+
 
   @override
   void dispose() {
