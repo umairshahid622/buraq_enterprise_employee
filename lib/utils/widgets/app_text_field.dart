@@ -131,7 +131,7 @@ class _AppTextFieldState extends State<AppTextField> {
 
     Widget textField = TextFormField(
       maxLines: widget.maxLines,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: AutovalidateMode.onUnfocus,
       inputFormatters: inputFormatters,
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -206,7 +206,7 @@ class _AppTextFieldState extends State<AppTextField> {
             widget.borderRadius ?? AppConstants.borderRadius,
           ),
           borderSide: BorderSide(
-            color: appColorScheme.error.withValues(alpha: .4),
+            color: appColorScheme.error,
           ),
         ),
         focusedErrorBorder: OutlineInputBorder(

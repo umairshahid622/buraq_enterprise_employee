@@ -237,10 +237,6 @@ class AppHelper {
     return formattedPhone;
   }
 
-  static String dateFormatter(String date) {
-    return date.toString().split(" ")[0];
-  }
-
   static double calculatePercentage(int value1, int value2) {
     if (value2 == 0) return 0;
 
@@ -259,11 +255,14 @@ class AppHelper {
     return daysRemaining;
   }
 
-
   static String getInitials(String name) {
     if (name.isEmpty) {
       return '';
     }
     return name.trim()[0];
+  }
+
+ static String formatDate(DateTime date) {
+    return DateFormat('MMM dd yyyy').format(date);
   }
 }

@@ -96,6 +96,7 @@ class AddExpenseScreenController extends BaseController {
         additionalNotes: additionalNotesController.text.trim(),
         employeeId: _dataController.user!.empId,
         projectId: projectNotifier.value!.projectId,
+        category: categoryNotifier.value!,
         projectName: projectNotifier.value!.projectName,
         receipt: selectedImage.value!,
       ),

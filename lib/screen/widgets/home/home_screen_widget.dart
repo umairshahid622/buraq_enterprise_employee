@@ -101,6 +101,7 @@ class HomeScreenWidget extends StatelessWidget {
           cardWidget: Column(
             children: [
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppUtils.rsContainer(context: context),
                   SizedBox(width: AppConstants.commonHorizontalSpacing),
@@ -133,6 +134,26 @@ class HomeScreenWidget extends StatelessWidget {
                           text: expenses[index].projectName,
                           fontSize: 14,
                         ),
+                        SizedBox(height: 4),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            categoryContainer(context, expenses, index),
+                            SizedBox(width: 12),
+                            Icon(
+                              Icons.watch_later_outlined,
+                              color: context.appColors.secondary,
+                            ),
+                            SizedBox(width: 6),
+                            Flexible(
+                              child: AppTextBody(
+                                text: AppHelper.formatDate(
+                                  expenses[index].createdAt,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -144,6 +165,25 @@ class HomeScreenWidget extends StatelessWidget {
       },
       separatorBuilder: (context, index) =>
           SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+    );
+  }
+
+  Container categoryContainer(
+    BuildContext context,
+    List<AddExpenseModel> expenses,
+    int index,
+  ) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      decoration: BoxDecoration(
+        color: context.appColors.primary.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: AppTextBody(
+        text: expenses[index].category,
+        color: context.appColors.primary,
+        fontSize: 12,
+      ),
     );
   }
 
@@ -160,7 +200,7 @@ class HomeScreenWidget extends StatelessWidget {
         final allocatedAmount = projectWithBudget.allocatedAmount;
 
         final totalBudget = allocatedAmount?.amount.toInt() ?? 0;
-        
+
         final int spentBudget = projectWithBudget.spent.toInt();
         final leftBudget = totalBudget - spentBudget;
         final double progressValue = AppHelper.calculatePercentage(

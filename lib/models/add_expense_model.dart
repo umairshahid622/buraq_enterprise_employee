@@ -7,13 +7,14 @@ class AddExpenseModel {
   String additionalNotes;
   String employeeId;
   String projectId;
+  String category;
   String projectName;
   String receiptUrl;
   String createdBy;
   String updatedBy;
 
-  Timestamp createdAt;
-  Timestamp updatedAt;
+  DateTime createdAt; // ✅ DateTime not Timestamp
+  DateTime updatedAt; // ✅ DateTime not Timestamp
 
   AddExpenseModel({
     required this.itemName,
@@ -22,6 +23,7 @@ class AddExpenseModel {
     required this.additionalNotes,
     required this.employeeId,
     required this.projectId,
+    required this.category,
     required this.projectName,
     required this.receiptUrl,
     required this.createdAt,
@@ -40,16 +42,17 @@ class AddExpenseModel {
       additionalNotes: data['additionalNotes'] ?? '',
       employeeId: data['employeeId'] ?? '',
       projectId: data['projectId'] ?? '',
+      category: data['category'] ?? '',
       projectName: data['projectName'] ?? '',
       receiptUrl: data['receiptUrl'] ?? '',
-      createdAt: data['createdAt'] ?? '',
-      updatedAt: data['updatedAt'] ?? '',
+      createdAt: (data['createdAt'] as Timestamp).toDate(), // ✅ Timestamp → DateTime
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(), // ✅ Timestamp → DateTime
       createdBy: data['createdBy'] ?? '',
       updatedBy: data['updatedBy'] ?? '',
     );
   }
 
-    @override
+  @override
   String toString() {
     return 'AddExpenseModel(projectId: $projectId, unitPrice: $unitPrice, itemQuantity: $itemQuantity)';
   }
