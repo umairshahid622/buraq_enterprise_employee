@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
 import 'package:buraq_enterprise_employee/data/screens/add_expense_repository.dart';
 import 'package:buraq_enterprise_employee/models/project_model.dart';
-import 'package:buraq_enterprise_employee/screen/controllers/common/project_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/common/main_layout_controller.dart';
 import 'package:buraq_enterprise_employee/utils/app_util.dart';
 import 'package:buraq_enterprise_employee/utils/classes/app_dropdown_button_class.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class AddExpenseScreenController extends ProjectController {
+class AddExpenseScreenController extends MainLayoutDataController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final TextEditingController itemNameController = TextEditingController();

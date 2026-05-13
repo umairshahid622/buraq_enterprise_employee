@@ -2,17 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddExpenseModel {
   String itemName;
-  String itemQuantity;
-  String unitPrice;
+  int itemQuantity;
+  int unitPrice;
   String additionalNotes;
   String employeeId;
   String projectId;
   String projectName;
   String receiptUrl;
-  String createdAt;
-  String updatedAt;
   String createdBy;
   String updatedBy;
+
+  Timestamp createdAt;
+  Timestamp updatedAt;
 
   AddExpenseModel({
     required this.itemName,

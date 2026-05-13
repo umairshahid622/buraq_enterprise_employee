@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:buraq_enterprise_employee/models/add_expense_model.dart';
 import 'package:buraq_enterprise_employee/utils/firestore_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 class AddExpenseRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-    final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final String collectionPath = 'add_expenses';
@@ -33,13 +34,31 @@ class AddExpenseRepository {
         'employeeId': employeeId,
         'projectId': projectId,
         'projectName': projectName,
-        'receiptUrl': receiptUrl, 
+        'receiptUrl': receiptUrl,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
         'createdBy': _auth.currentUser!.uid,
         'updatedBy': _auth.currentUser!.uid,
       }),
     );
+  }
+
+  Future<List<AddExpenseModel>> fetchExpenses({
+    required String employeeId,
+  }) async {
+    final QuerySnapshot<Map<String, dynamic>> snapShot =
+        await FirestoreHelper.call(
+          () => _firestore
+              .collection(collectionPath)
+              .where('employeeId', isEqualTo: employeeId)
+              .get(),
+        );
+
+    List<AddExpenseModel> expenses = snapShot.docs
+        .map((doc) => AddExpenseModel.fromSnapshot(doc))
+        .toList();
+
+    return expenses;
   }
 
   Future<String> _uploadReceipt(File file) async {

@@ -15,8 +15,12 @@ class AppUtils {
     required AppColorScheme colorScheme,
     double size = 75.0,
   }) {
-    final String firstNameInitial = AppHelper.getInitials(firstName).toUpperCase();
-    final String lastNameInitial = AppHelper.getInitials(lastName).toUpperCase();
+    final String firstNameInitial = AppHelper.getInitials(
+      firstName,
+    ).toUpperCase();
+    final String lastNameInitial = AppHelper.getInitials(
+      lastName,
+    ).toUpperCase();
     return Container(
       alignment: Alignment.center,
       width: size,
@@ -195,7 +199,23 @@ class AppUtils {
     );
   }
 
-  static Divider divider({required AppColorScheme colorScheme, double thickness = 1.0}) {
+  static Divider divider({
+    required AppColorScheme colorScheme,
+    double thickness = 1.0,
+  }) {
     return Divider(color: colorScheme.secondary, thickness: thickness);
+  }
+
+  static Container rsContainer({required BuildContext context}) {
+    return Container(
+      height: 44,
+      width: 44,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: context.appColors.secondary.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: AppTextBody(text: "Rs", fontSize: 14, fontWeight: FontWeight.bold,),
+    );
   }
 }

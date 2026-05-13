@@ -1,8 +1,10 @@
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
+import 'package:buraq_enterprise_employee/models/add_expense_model.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/home/home_screen_controller.dart';
 import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:buraq_enterprise_employee/utils/app_util.dart';
+import 'package:buraq_enterprise_employee/utils/classes/project_with_budget.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_card_widget.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_scroll_body.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
@@ -23,6 +25,10 @@ class HomeScreenWidget extends StatelessWidget {
         int allocatedBalance = controller.allocatedAmount.toInt();
         int spentBalance = controller.spentAmount.toInt();
         int availaibleBalance = allocatedBalance - spentBalance;
+
+        final List<ProjectWithBudget> projectsWithBudget =
+            controller.projectsWithBudget;
+        final List<AddExpenseModel> expenses = controller.expenses;
         return RefreshIndicator(
           onRefresh: () {
             return controller.fetchData();
@@ -39,7 +45,7 @@ class HomeScreenWidget extends StatelessWidget {
                     spentBalance,
                   ),
                   SizedBox(height: AppConstants.commonVerticalSpacing),
-                  controller.projectsWithBudget.isNotEmpty
+                  projectsWithBudget.isNotEmpty
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -48,30 +54,91 @@ class HomeScreenWidget extends StatelessWidget {
                           ],
                         )
                       : SizedBox.shrink(),
-                  controller.projectsWithBudget.isNotEmpty
+                  projectsWithBudget.isNotEmpty
                       ? SizedBox(height: AppConstants.commonVerticalSpacing / 2)
                       : SizedBox.shrink(),
-                  controller.projectsWithBudget.isEmpty
+                  projectsWithBudget.isEmpty
                       ? AppUtils.noDataFound(
                           context: context,
                           heading: "No projects available",
                           subHeading: "Ask you admin to assign you a project",
                         )
                       : projectList(controller),
-                  SizedBox(height: AppConstants.commonVerticalSpacing/2),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      AppTextHeading(text: "Recent Expenses", fontSize: 16),
-                      AppTextButton(buttonText: "View All"),
-                    ],
-                  ),
+                  SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+                  expenses.isNotEmpty
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AppTextHeading(
+                              text: "Recent Expenses",
+                              fontSize: 16,
+                            ),
+                            AppTextButton(buttonText: "View All"),
+                          ],
+                        )
+                      : SizedBox.shrink(),
+                  expenses.isNotEmpty
+                      ? SizedBox(height: AppConstants.commonVerticalSpacing / 2)
+                      : SizedBox.shrink(),
+                  expenses.isNotEmpty
+                      ? expenseList(expenses)
+                      : SizedBox.shrink(),
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  ListView expenseList(List<AddExpenseModel> expenses) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: expenses.length,
+      itemBuilder: (context, index) {
+        return AppCardWidget(
+          cardWidget: Column(
+            children: [
+              Row(
+                children: [
+                  AppUtils.rsContainer(context: context),
+                  SizedBox(width: AppConstants.commonHorizontalSpacing),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AppTextHeading(text: expenses[index].itemName, fontSize: 20,),
+                            AppTextHeading(
+                              text: AppHelper.formatPKR(
+                                int.parse(
+                                      expenses[index].unitPrice.toString(),
+                                    ) *
+                                    int.parse(
+                                      expenses[index].itemQuantity.toString(),
+                                    ),
+                              ),
+                              fontSize: 18,
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 4,),
+                        AppTextBody(text: expenses[index].projectName, fontSize: 14,),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+      separatorBuilder: (context, index) =>
+          SizedBox(height: AppConstants.commonVerticalSpacing/2),
     );
   }
 
@@ -149,7 +216,7 @@ class HomeScreenWidget extends StatelessWidget {
         );
       },
       separatorBuilder: (context, index) =>
-          SizedBox(height: AppConstants.commonVerticalSpacing),
+          SizedBox(height: AppConstants.commonVerticalSpacing/2),
     );
   }
 

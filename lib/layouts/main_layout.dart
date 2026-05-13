@@ -1,6 +1,6 @@
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
-import 'package:buraq_enterprise_employee/screen/controllers/common/project_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/common/main_layout_controller.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/buttons/theme_toggle_button.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class _MainLayoutState extends State<MainLayout> {
   @override
   void initState() {   
     super.initState();
-     Get.put<ProjectController>(ProjectController());
+     Get.put<MainLayoutDataController>(MainLayoutDataController());
   }
 
   @override

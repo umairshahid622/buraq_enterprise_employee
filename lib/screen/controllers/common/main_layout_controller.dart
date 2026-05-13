@@ -2,20 +2,21 @@ import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart'
 import 'package:buraq_enterprise_employee/core/controllers/user_controller.dart';
 import 'package:buraq_enterprise_employee/data/common/allocated_amount_repository.dart';
 import 'package:buraq_enterprise_employee/data/common/project_member_repository.dart';
+import 'package:buraq_enterprise_employee/data/screens/add_expense_repository.dart';
 import 'package:buraq_enterprise_employee/data/screens/project_repository.dart';
+import 'package:buraq_enterprise_employee/models/add_expense_model.dart';
 import 'package:buraq_enterprise_employee/models/allocated_amount_model.dart';
 import 'package:buraq_enterprise_employee/models/project_model.dart';
 import 'package:buraq_enterprise_employee/models/user_model.dart';
 import 'package:buraq_enterprise_employee/utils/classes/project_with_budget.dart';
 import 'package:get/get.dart';
 
-class ProjectController extends BaseController {
+class MainLayoutDataController extends BaseController {
   //repositories
-  final AllocatedAmountRepository _allocatedAmountRepository =
-      AllocatedAmountRepository();
-  final ProjectMemberRepository _projectMemberRepository =
-      ProjectMemberRepository();
+  final AllocatedAmountRepository _allocatedAmountRepository = AllocatedAmountRepository();
+  final ProjectMemberRepository _projectMemberRepository = ProjectMemberRepository();
   final ProjectRepository _projectRepo = ProjectRepository();
+  final AddExpenseRepository _addExpenseRepository = AddExpenseRepository();
   //controllers
   late final UserController _userController;
 
@@ -27,6 +28,7 @@ class ProjectController extends BaseController {
   List<ProjectModel> _projects = [];
   List<AllocatedAmountModel> _allocatedAmounts = [];
   List<ProjectWithBudget> _projectsWithBudget = [];
+  List<AddExpenseModel> _expenses = [];
 
   @override
   void onInit() {
@@ -55,6 +57,7 @@ class ProjectController extends BaseController {
     final results = await safeCall(
       () => Future.wait([
         _allocatedAmountRepository.getAllocatedAmount(employeeId: empId),
+        _addExpenseRepository.fetchExpenses(employeeId: empId),
         _fetchProjects(empId),
       ]),
     );
@@ -63,7 +66,8 @@ class ProjectController extends BaseController {
       final (list, total) = results[0] as (List<AllocatedAmountModel>, double);
       _allocatedAmounts = list;
       _totalAllocatedAmount = total;
-      _projects = results[1] as List<ProjectModel>;
+      _expenses = results[1] as List<AddExpenseModel>;
+      _projects = results[2] as List<ProjectModel>;
       _projectsWithBudget = _joinProjectsWithBudget();
       update();
     }
@@ -91,5 +95,6 @@ class ProjectController extends BaseController {
   List<ProjectModel> get projects => _projects;
 
   List<ProjectWithBudget> get projectsWithBudget => _projectsWithBudget;
+  List<AddExpenseModel> get expenses => _expenses;
   UserModel? get user => _userController.user;
 }
