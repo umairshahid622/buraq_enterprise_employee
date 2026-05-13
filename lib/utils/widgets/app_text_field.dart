@@ -131,6 +131,7 @@ class _AppTextFieldState extends State<AppTextField> {
 
     Widget textField = TextFormField(
       maxLines: widget.maxLines,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       inputFormatters: inputFormatters,
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -180,6 +181,9 @@ class _AppTextFieldState extends State<AppTextField> {
         prefixIcon: widget.prefixIcon ?? defaultPrefixIcon,
         suffixIcon: widget.suffixIcon,
         counterText: "",
+        errorStyle: GoogleFonts.inter(
+          color: appColorScheme.error
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(
             widget.borderRadius ?? AppConstants.borderRadius,

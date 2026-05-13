@@ -1,100 +1,176 @@
+import 'package:buraq_enterprise_employee/core/config/colors/app_color_scheme.dart';
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
-class AppDropdownButton<T, V> extends StatelessWidget {
+class AppDropdownButton<T, V> extends StatefulWidget {
   const AppDropdownButton({
     super.key,
-    required this.items, // The list of any objects
-    required this.valueNotifier, // Notifier for the selected ID
+    required this.items,
+    required this.valueNotifier,
     required this.onChanged,
-    required this.itemLabel, // Function to tell us what text to show
-    required this.itemValue, // Function to tell us which field is the ID
+    required this.itemLabel,
+    required this.itemValue,
     required this.hint,
     this.height,
     required this.enabled,
     this.buttonBackgroundColor,
     this.dropdownBackgroundColor,
     this.label,
+    this.validator,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
   });
 
   final List<T> items;
   final ValueNotifier<V?> valueNotifier;
   final void Function(V? value) onChanged;
-  final String Function(T item) itemLabel; // Extracts display text
-  final V Function(T item) itemValue; // Extracts the ID/Value
-
+  final String Function(T item) itemLabel;
+  final V Function(T item) itemValue;
   final String hint;
   final double? height;
   final bool enabled;
   final Color? buttonBackgroundColor;
   final Color? dropdownBackgroundColor;
   final String? label;
+  final String? Function(V? value)? validator;
+  final AutovalidateMode autovalidateMode;
+
+  @override
+  State<AppDropdownButton<T, V>> createState() =>
+      AppDropdownButtonState<T, V>();
+}
+
+class AppDropdownButtonState<T, V> extends State<AppDropdownButton<T, V>> {
+  // ─── We embed a FormField so it registers with the parent Form ───
 
   @override
   Widget build(BuildContext context) {
-    final appColors = context.appColors;
+    final AppColorScheme appColors = context.appColors;
 
-    final dropDown = DropdownButtonHideUnderline(
+    return FormField<V>(
+      initialValue: widget.valueNotifier.value,
+      validator: widget.validator,
+      autovalidateMode: widget.autovalidateMode,
+      builder: (FormFieldState<V> field) {
+        final hasError = field.hasError;
+
+        final dropDown = _buildDropdown(appColors, field, hasError);
+        final dropdownWithError = _buildDropdownWithError(dropDown, field, hasError, appColors);
+
+        return _buildWithLabel(dropdownWithError);
+      },
+    );
+  }
+
+  // ─── Dropdown widget ───────────────────────────────────────────────
+  Widget _buildDropdown(
+    AppColorScheme appColors,
+    FormFieldState<V> field,
+    bool hasError,
+  ) {
+    return DropdownButtonHideUnderline(
       child: DropdownButton2<V>(
-        // V is the type of the ID (usually String)
         isExpanded: true,
-        valueListenable: valueNotifier,
-        hint: AppTextBody(text: hint, color: appColors.secondary),
-        items: items.map((T item) {
+        valueListenable: widget.valueNotifier,
+        hint: AppTextBody(text: widget.hint, color: hasError? appColors.error: appColors.secondary),
+        items: widget.items.map((T item) {
           return DropdownItem<V>(
-            value: itemValue(item), // Dynamic ID
-            child: AppTextBody(text: itemLabel(item)), // Dynamic Label
+            value: widget.itemValue(item),
+            child: AppTextBody(text: widget.itemLabel(item)),
           );
         }).toList(),
         selectedItemBuilder: (context) {
-          return items.map((T item) {
-            return AppTextBody(text: itemLabel(item));
+          return widget.items.map((T item) {
+            return AppTextBody(text: widget.itemLabel(item));
           }).toList();
         },
-        onChanged: enabled ? onChanged : null,
+        onChanged: widget.enabled
+            ? (value) {
+                widget.valueNotifier.value = value; // keep notifier in sync
+                field.didChange(value);              // notify the Form
+                widget.onChanged(value);
+              }
+            : null,
         buttonStyleData: ButtonStyleData(
           elevation: 0,
-          height: height ?? 52,
+          height: widget.height ?? 52,
           decoration: BoxDecoration(
-            color: buttonBackgroundColor ?? appColors.textFieldBgColor,
+            color: widget.buttonBackgroundColor ?? appColors.textFieldBgColor,
             borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-            border: Border.all(color: appColors.borderColor),
+            border: Border.all(
+              color: hasError ? appColors.error : appColors.borderColor,
+              width: hasError ? 1.5 : 1.0,
+            ),
           ),
         ),
         dropdownStyleData: DropdownStyleData(
           offset: const Offset(0, -5),
           elevation: 1,
           decoration: BoxDecoration(
-            color: dropdownBackgroundColor ?? appColors.chipColor,
+            color: widget.dropdownBackgroundColor ?? appColors.chipColor,
             border: Border.all(color: appColors.borderColor),
             borderRadius: BorderRadius.circular(AppConstants.borderRadius),
           ),
         ),
-        iconStyleData: const IconStyleData(
-          icon: Icon(Icons.keyboard_arrow_down),
+        iconStyleData: IconStyleData(
+          icon: Icon(
+            Icons.keyboard_arrow_down,
+            color: hasError ? appColors.error : null,
+          ),
         ),
       ),
     );
+  }
 
-    if (label != null || label!.isNotEmpty) {
+  // ─── Dropdown + error text below ──────────────────────────────────
+  Widget _buildDropdownWithError(
+    Widget dropDown,
+    FormFieldState<V> field,
+    bool hasError,
+    AppColorScheme appColor
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        dropDown,
+        if (hasError) ...[
+          const SizedBox(height: 4),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppConstants.textFieldLabelMargin,
+            ),
+            child: AppTextBody(
+              text:  field.errorText!,
+              color: appColor.error,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  // ─── Optional label on top ────────────────────────────────────────
+  Widget _buildWithLabel(Widget dropdownWithError) {
+    if (widget.label != null && widget.label!.isNotEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(
               horizontal: AppConstants.textFieldLabelMargin,
             ),
-            child: AppTextHeading(text: label!, fontSize: 14),
+            child: AppTextHeading(text: widget.label!, fontSize: 14),
           ),
           SizedBox(height: AppConstants.textFieldLabelMarginVertical),
-          dropDown,
+          dropdownWithError,
         ],
       );
-    } else {
-      return dropDown;
     }
+    return dropdownWithError;
   }
 }

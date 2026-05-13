@@ -91,4 +91,5 @@ class ProjectController extends BaseController {
   List<ProjectModel> get projects => _projects;
 
   List<ProjectWithBudget> get projectsWithBudget => _projectsWithBudget;
+  UserModel? get user => _userController.user;
 }

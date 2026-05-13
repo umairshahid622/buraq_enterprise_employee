@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AllocatedAmountModel {
-  String docId;        // ✅ add this
+  String docId; 
   String allocatedBy;
   int amount;
   DateTime createdAt;
@@ -10,7 +10,7 @@ class AllocatedAmountModel {
   DateTime updatedAt;
 
   AllocatedAmountModel({
-    required this.docId,  // ✅
+    required this.docId,
     required this.allocatedBy,
     required this.amount,
     required this.createdAt,
@@ -23,7 +23,7 @@ class AllocatedAmountModel {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     return AllocatedAmountModel(
-      docId: doc.id,   // ✅ grabbed from Firestore document
+      docId: doc.id,
       allocatedBy: data['allocateBy'] ?? '',
       amount: data['amount'] ?? 0,
       createdAt: (data['createdAt'] as Timestamp).toDate(),

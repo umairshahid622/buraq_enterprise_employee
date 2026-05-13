@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
@@ -41,6 +43,7 @@ class AddExpenseScreenWidget extends StatelessWidget {
           child: Skeletonizer(
             enabled: controller.isLoading.value,
             child: Form(
+              key: controller.formKey,
               child: Column(
                 children: [
                   AppCardWidget(
@@ -66,6 +69,7 @@ class AddExpenseScreenWidget extends StatelessWidget {
                         ),
                         SizedBox(height: AppConstants.commonVerticalSpacing),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Flexible(
                               child: AppTextField(
@@ -108,18 +112,25 @@ class AddExpenseScreenWidget extends StatelessWidget {
                         SizedBox(height: AppConstants.commonVerticalSpacing),
                         buildReceiptUploader(
                           context: context,
+                          validator: (value) {
+                            if (value == null) {
+                              return "Image is required";
+                            }
+                            return null;
+                          },
                           controller: controller,
                         ),
-                        controller.selectedImage != null
+                        controller.selectedImage.value != null
                             ? SizedBox(
                                 height: AppConstants.commonVerticalSpacing,
                               )
                             : SizedBox.shrink(),
-                        controller.selectedImage != null
+                        controller.selectedImage.value != null
                             ? AppFilledButton(
                                 backgroundeColor: context.appColors.error,
                                 buttonText: "Remove Image",
-                                onPressedCallBack: ()=> controller.removeImage(),
+                                onPressedCallBack: () =>
+                                    controller.removeImage(),
                               )
                             : SizedBox.shrink(),
                       ],
@@ -142,7 +153,8 @@ class AddExpenseScreenWidget extends StatelessWidget {
                   ),
                   SizedBox(height: AppConstants.commonVerticalSpacing),
                   AppFilledButton(
-                    onPressedCallBack: () {},
+                    isLoading: controller.isLoading.value,
+                    onPressedCallBack: () => controller.addExpense(),
                     buttonText: "Save Expense",
                   ),
                   SizedBox(height: AppConstants.commonVerticalSpacing),
@@ -155,12 +167,12 @@ class AddExpenseScreenWidget extends StatelessWidget {
     );
   }
 
-  void showImageSourceOptions(
+  Future<void> showImageSourceOptions(
     BuildContext context,
     AddExpenseScreenController controller,
-  ) {
+  ) async {
     double fontSize = 16.0;
-    showDialog(
+    await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: AppTextHeading(text: "Select Image Source"),
@@ -194,63 +206,80 @@ class AddExpenseScreenWidget extends StatelessWidget {
   Widget buildReceiptUploader({
     required BuildContext context,
     required AddExpenseScreenController controller,
+    final String? Function(File? value)? validator,
   }) {
-    return CustomPaint(
-      painter: DashedBorderContainer(
-        color: context.appColors.primary.withValues(
-          alpha: 0.75,
-        ), // Match the gold-ish tint in your image
-        borderRadius: AppConstants.borderRadius,
-        dashPattern: [8, 4],
-      ),
-      child: InkWell(
-        onTap: () {
-          showImageSourceOptions(context, controller);
-        },
-        child: Container(
-          width: double.infinity,
-          height: 130,
-          padding: EdgeInsets.all(
-            controller.selectedImage == null
-                ? AppConstants.padding
-                : AppConstants.padding / 2,
+    return FormField<File>(
+      validator: (_) => validator?.call(controller.selectedImage.value),
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      builder: (FormFieldState<File> state) {
+        final bool hasError = state.hasError;
+        final Color color = hasError
+            ? context.appColors.error
+            : context.appColors.primary;
+
+        return CustomPaint(
+          painter: DashedBorderContainer(
+            color: color.withValues(alpha: 0.75),
+            borderRadius: AppConstants.borderRadius,
+            dashPattern: [8, 4],
           ),
-          decoration: BoxDecoration(
-            color: context.appColors.primary.withValues(
-              alpha: 0.03,
-            ), // Dark background
-            borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-          ),
-          child: controller.selectedImage == null
-              ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.camera_alt_outlined,
-                      color: Colors.grey,
-                      size: 48,
-                    ),
-                    SizedBox(height: 16),
-                    AppTextHeading(
-                      text: "Take photo or upload receipt",
-                      fontSize: 16,
-                    ),
-                  ],
-                )
-              : ClipRRect(
+          child: InkWell(
+            onTap: () async {
+              await showImageSourceOptions(context, controller);
+              // ✅ Only didChange — no controller.update()
+              state.didChange(controller.selectedImage.value);
+            },
+            child: Obx(() {
+              // ✅ Obx handles image UI reactively
+              final image = controller.selectedImage.value;
+              return Container(
+                width: double.infinity,
+                height: 130,
+                padding: EdgeInsets.all(
+                  image == null
+                      ? AppConstants.padding
+                      : AppConstants.padding / 4,
+                ),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.03),
                   borderRadius: BorderRadius.circular(
-                    AppConstants.borderRadius - 5,
-                  ),
-                  child: Image.file(
-                    controller.selectedImage!,
-                    width: double.infinity,
-                    height: 130,
-                    fit: BoxFit.cover,
+                    AppConstants.borderRadius,
                   ),
                 ),
-        ),
-      ),
+                child: image == null
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.camera_alt_outlined,
+                            color: hasError? context.appColors.error: Colors.grey,
+                            size: 48,
+                          ),
+                          SizedBox(height: 16),
+                          AppTextHeading(
+                            text: "Take photo or upload receipt",
+                            color: hasError? context.appColors.error: context.appColors.text,
+                            fontSize: 16,
+                          ),
+                        ],
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          AppConstants.borderRadius - 5,
+                        ),
+                        child: Image.file(
+                          image,
+                          width: double.infinity,
+                          height: 130,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+              );
+            }),
+          ),
+        );
+      },
     );
   }
 
@@ -259,8 +288,14 @@ class AddExpenseScreenWidget extends StatelessWidget {
       label: "Category",
       items: controller.categoryDropdownItems,
       itemLabel: (item) => item.label,
-      itemValue: (item) => item.id,          
+      itemValue: (item) => item.id,
       valueNotifier: controller.categoryNotifier,
+      validator: (value) {
+        if (value == null) {
+          return "Select the Category";
+        }
+        return null;
+      },
       onChanged: (value) => controller.selectedCategory = value,
       hint: "Select Category",
       enabled: true,
@@ -274,6 +309,12 @@ class AddExpenseScreenWidget extends StatelessWidget {
       valueNotifier: controller.projectNotifier,
       itemLabel: (item) => item.projectName,
       itemValue: (item) => item,
+      validator: (value) {
+        if (value == null) {
+          return "Select the Project";
+        }
+        return null;
+      },
       onChanged: (ProjectModel? value) => controller.selectedProject = value,
       hint: "Select Project",
       enabled: true,

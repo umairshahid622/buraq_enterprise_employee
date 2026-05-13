@@ -14,6 +14,7 @@ abstract class BaseController extends GetxController {
       return await action();
     } catch (e) {
       String error = AppHelper.getFirebaseErrorMessage(message: e.toString());
+      print("error:::: $e");
       AppUtils.showToast(label: error, variant: ToastVariants.error);
       return null;
     } finally {
