@@ -13,8 +13,10 @@ import 'package:get/get.dart';
 
 class MainLayoutDataController extends BaseController {
   //repositories
-  final AllocatedAmountRepository _allocatedAmountRepository = AllocatedAmountRepository();
-  final ProjectMemberRepository _projectMemberRepository = ProjectMemberRepository();
+  final AllocatedAmountRepository _allocatedAmountRepository =
+      AllocatedAmountRepository();
+  final ProjectMemberRepository _projectMemberRepository =
+      ProjectMemberRepository();
   final ProjectRepository _projectRepo = ProjectRepository();
   final AddExpenseRepository _addExpenseRepository = AddExpenseRepository();
   //controllers
@@ -66,7 +68,11 @@ class MainLayoutDataController extends BaseController {
       final (list, total) = results[0] as (List<AllocatedAmountModel>, double);
       _allocatedAmounts = list;
       _totalAllocatedAmount = total;
-      _expenses = results[1] as List<AddExpenseModel>;
+
+      final (expenseList, totalExpense) = results[1] as (List<AddExpenseModel>, double);
+      _expenses = expenseList;
+      _spentAmount = totalExpense;
+
       _projects = results[2] as List<ProjectModel>;
       _projectsWithBudget = _joinProjectsWithBudget();
       update();
@@ -82,10 +88,18 @@ class MainLayoutDataController extends BaseController {
   List<ProjectWithBudget> _joinProjectsWithBudget() {
     final budgetMap = {for (final a in _allocatedAmounts) a.projectId: a};
 
+    // ✅ Group all expenses by projectId
+    final expensesMap = <String, List<AddExpenseModel>>{};
+    for (final e in _expenses) {
+      expensesMap.putIfAbsent(e.projectId, () => []).add(e);
+    }
+    print("Join Called");
+
     return _projects.map((project) {
       return ProjectWithBudget(
         project: project,
-        allocatedAmount: budgetMap[project.projectId], // null if no allocation
+        allocatedAmount: budgetMap[project.projectId],
+        expenses: expensesMap[project.projectId] ?? [],
       );
     }).toList();
   }

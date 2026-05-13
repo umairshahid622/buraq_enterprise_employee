@@ -35,8 +35,8 @@ class AddExpenseModel {
 
     return AddExpenseModel(
       itemName: data['itemName'] ?? '',
-      itemQuantity: data['itemQuantity'] ?? '',
-      unitPrice: data['unitPrice'] ?? '',
+      itemQuantity: data['itemQuantity'] ?? 0,
+      unitPrice: data['unitPrice'] ?? 0,
       additionalNotes: data['additionalNotes'] ?? '',
       employeeId: data['employeeId'] ?? '',
       projectId: data['projectId'] ?? '',
@@ -47,5 +47,10 @@ class AddExpenseModel {
       createdBy: data['createdBy'] ?? '',
       updatedBy: data['updatedBy'] ?? '',
     );
+  }
+
+    @override
+  String toString() {
+    return 'AddExpenseModel(projectId: $projectId, unitPrice: $unitPrice, itemQuantity: $itemQuantity)';
   }
 }

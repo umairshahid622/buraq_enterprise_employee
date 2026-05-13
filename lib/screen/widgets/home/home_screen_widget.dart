@@ -112,7 +112,10 @@ class HomeScreenWidget extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            AppTextHeading(text: expenses[index].itemName, fontSize: 20,),
+                            AppTextHeading(
+                              text: expenses[index].itemName,
+                              fontSize: 20,
+                            ),
                             AppTextHeading(
                               text: AppHelper.formatPKR(
                                 int.parse(
@@ -126,8 +129,11 @@ class HomeScreenWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 4,),
-                        AppTextBody(text: expenses[index].projectName, fontSize: 14,),
+                        SizedBox(height: 4),
+                        AppTextBody(
+                          text: expenses[index].projectName,
+                          fontSize: 14,
+                        ),
                       ],
                     ),
                   ),
@@ -138,7 +144,7 @@ class HomeScreenWidget extends StatelessWidget {
         );
       },
       separatorBuilder: (context, index) =>
-          SizedBox(height: AppConstants.commonVerticalSpacing/2),
+          SizedBox(height: AppConstants.commonVerticalSpacing / 2),
     );
   }
 
@@ -148,11 +154,15 @@ class HomeScreenWidget extends StatelessWidget {
       physics: NeverScrollableScrollPhysics(),
       itemCount: controller.projectsWithBudget.length,
       itemBuilder: (context, index) {
-        final project = controller.projectsWithBudget[index].project;
-        final allocatedAmount =
-            controller.projectsWithBudget[index].allocatedAmount;
+        final ProjectWithBudget projectWithBudget =
+            controller.projectsWithBudget[index];
+
+        final project = projectWithBudget.project;
+        final allocatedAmount = projectWithBudget.allocatedAmount;
+
         final totalBudget = allocatedAmount?.amount.toInt() ?? 0;
-        final spentBudget = 300;
+        
+        final int spentBudget = projectWithBudget.spent.toInt();
         final leftBudget = totalBudget - spentBudget;
         final double progressValue = AppHelper.calculatePercentage(
           spentBudget,
@@ -216,7 +226,7 @@ class HomeScreenWidget extends StatelessWidget {
         );
       },
       separatorBuilder: (context, index) =>
-          SizedBox(height: AppConstants.commonVerticalSpacing/2),
+          SizedBox(height: AppConstants.commonVerticalSpacing / 2),
     );
   }
 

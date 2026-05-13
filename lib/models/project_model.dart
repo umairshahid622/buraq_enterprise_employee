@@ -24,7 +24,7 @@ class ProjectModel {
     required this.remainingBudget,
     required this.status,
     required this.createdBy,
-    required this.updatedBy,  
+    required this.updatedBy,
     this.createdAt,
     this.updatedAt,
   });
@@ -35,7 +35,7 @@ class ProjectModel {
     return ProjectModel(
       projectId: data['projectId'] ?? '',
       projectName: data['projectName'] ?? '',
-      projectDiscription: data['projectDiscription'] ?? '',      
+      projectDiscription: data['projectDiscription'] ?? '',
       startDate: (data['startDate'] as Timestamp).toDate(),
       endDate: (data['endDate'] as Timestamp).toDate(),
       totalBudgetAllocated: data['totalBudgetAllocated'] ?? 0,
@@ -63,5 +63,10 @@ class ProjectModel {
       'updatedAt': FieldValue.serverTimestamp(),
       // Note: createdAt is usually set once on the server side
     };
+  }
+
+  @override
+  String toString() {
+    return 'ProjectModel(projectId: $projectId, projectName: $projectName)';
   }
 }

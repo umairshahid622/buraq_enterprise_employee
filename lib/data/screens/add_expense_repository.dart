@@ -43,7 +43,7 @@ class AddExpenseRepository {
     );
   }
 
-  Future<List<AddExpenseModel>> fetchExpenses({
+  Future<(List<AddExpenseModel>,double)> fetchExpenses({
     required String employeeId,
   }) async {
     final QuerySnapshot<Map<String, dynamic>> snapShot =
@@ -57,8 +57,10 @@ class AddExpenseRepository {
     List<AddExpenseModel> expenses = snapShot.docs
         .map((doc) => AddExpenseModel.fromSnapshot(doc))
         .toList();
+    
+    final totalSpent = expenses.fold<double>(0.0, (prev, next) => prev + next.unitPrice * next.itemQuantity);
 
-    return expenses;
+    return (expenses, totalSpent);
   }
 
   Future<String> _uploadReceipt(File file) async {

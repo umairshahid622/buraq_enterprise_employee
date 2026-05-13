@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AllocatedAmountModel {
-  String docId; 
+  String docId;
   String allocatedBy;
   int amount;
   DateTime createdAt;
@@ -33,7 +33,6 @@ class AllocatedAmountModel {
     );
   }
 
-
   Map<String, dynamic> toJson() {
     return {
       'allocateBy': allocatedBy,
@@ -43,5 +42,10 @@ class AllocatedAmountModel {
       'projectId': projectId,
       'updatedAt': updatedAt,
     };
+  }
+
+  @override
+  String toString() {
+    return 'AllocatedAmountModel(projectId: $projectId, amount: $amount)';
   }
 }
