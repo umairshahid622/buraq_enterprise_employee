@@ -65,8 +65,8 @@ class _MainLayoutState extends State<MainLayout> {
     };
 
     // Handle dynamic titles for nested routes
-    if (location.startsWith('/home/expense-transaction')) {
-      _heading = 'Expense Transaction';
+    if (location.startsWith('/home/manage-expense')) {
+      _heading = 'Manage Expense';
       _headingFontSize = 20;
       _subHeading = null;
     } else {

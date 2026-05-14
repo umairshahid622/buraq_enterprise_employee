@@ -100,7 +100,7 @@ class HomeScreenWidget extends StatelessWidget {
       itemBuilder: (context, index) {
         return AppCardWidget(
           onTap: () {
-            context.push("/home/expense-transaction", extra: expenses[index]);
+            context.push("/home/manage-expense", extra: expenses[index]);
           },
           cardWidget: Column(
             children: [
