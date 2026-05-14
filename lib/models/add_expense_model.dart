@@ -4,6 +4,7 @@ class AddExpenseModel {
   String expenseId;
   String itemName;
   int itemQuantity;
+  int usedItems;
   int unitPrice;
   String additionalNotes;
   String employeeId;
@@ -22,6 +23,7 @@ class AddExpenseModel {
     required this.expenseId,
     required this.itemName,
     required this.itemQuantity,
+    required this.usedItems,
     required this.unitPrice,
     required this.additionalNotes,
     required this.employeeId,
@@ -43,6 +45,7 @@ class AddExpenseModel {
       expenseId: data['expenseId'] ?? '',
       itemName: data['itemName'] ?? '',
       itemQuantity: data['itemQuantity'] ?? 0,
+      usedItems: data['usedItems'] ?? 0,
       unitPrice: data['unitPrice'] ?? 0,
       additionalNotes: data['additionalNotes'] ?? '',
       employeeId: data['employeeId'] ?? '',

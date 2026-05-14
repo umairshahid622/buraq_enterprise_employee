@@ -19,6 +19,7 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   String _heading = '';
   String? _subHeading;
+  double _headingFontSize = AppConstants.mainHeadingFontSize;
   bool _isNestedRoute = false;  
   
   @override
@@ -64,9 +65,9 @@ class _MainLayoutState extends State<MainLayout> {
     };
 
     // Handle dynamic titles for nested routes
-    if (location.startsWith('/projects/manage/')) {
-      final projectId = location.split('/').last;
-      _heading = 'Manage $projectId';
+    if (location.startsWith('/home/expense-transaction')) {
+      _heading = 'Expense Transaction';
+      _headingFontSize = 20;
       _subHeading = null;
     } else {
       _heading = titles[location]?["heading"] ?? "";
@@ -85,9 +86,10 @@ class _MainLayoutState extends State<MainLayout> {
 
     return Scaffold(
       appBar: AppBar(        
+        automaticallyImplyLeading: _isNestedRoute,        
         leading: _isNestedRoute
             ? IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18,),
                 onPressed: () {
                   if (GoRouter.of(context).canPop()) {
                     context.pop();
@@ -102,7 +104,7 @@ class _MainLayoutState extends State<MainLayout> {
           children: [
             AppTextHeading(
               text: _heading,
-              fontSize: AppConstants.mainHeadingFontSize,
+              fontSize: _headingFontSize,
             ),
             _subHeading != null
                 ? const SizedBox(height: 2.5)

@@ -11,6 +11,7 @@ import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/buttons/app_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreenWidget extends StatelessWidget {
@@ -98,6 +99,9 @@ class HomeScreenWidget extends StatelessWidget {
       itemCount: expenses.length,
       itemBuilder: (context, index) {
         return AppCardWidget(
+          onTap: () {
+            context.push("/home/expense-transaction", extra: expenses[index]);
+          },
           cardWidget: Column(
             children: [
               Column(
@@ -184,8 +188,8 @@ class HomeScreenWidget extends StatelessWidget {
                       SizedBox(width: 12),
                       AppUtils.expenseCard(
                         context,
-                        "Availaible",
-                        expenses[index].itemQuantity - expenses[index].returns,
+                        "Used",
+                        expenses[index].usedItems
                       ),
                     ],
                   ),
