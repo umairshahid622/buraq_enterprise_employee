@@ -113,23 +113,18 @@ class AppUtils {
   static Expanded expenseCard(
     BuildContext context,
     String expenseType,
-    int amount, {
-    bool showCurrency = true,
-    bool isLoading = false,
+    int amount, {    
     AppColorScheme? colorScheme,
   }) {
     final colors = colorScheme ?? context.appColors;
     return Expanded(
       child: Container(
-        height: isLoading ? 52 : null,
         padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
           color: colors.chipColor,
           borderRadius: BorderRadius.circular(AppConstants.cardBorderRadius),
         ),
-        child: isLoading
-            ? const Center(child: AppSpiner(size: 20))
-            : Column(
+        child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   AppTextHeading(
@@ -139,9 +134,7 @@ class AppUtils {
                   ),
                   SizedBox(height: 5),
                   AppTextHeading(
-                    text: showCurrency
-                        ? AppHelper.formatPKR(amount)
-                        : amount.toString(),
+                    text: amount.toString(),
                     fontSize: 16,
                   ),
                 ],
@@ -215,7 +208,20 @@ class AppUtils {
         color: context.appColors.secondary.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: AppTextBody(text: "Rs", fontSize: 14, fontWeight: FontWeight.bold,),
+      child: AppTextBody(text: "Rs", fontSize: 14, fontWeight: FontWeight.bold),
+    );
+  }
+
+  static Container iconContainer({required BuildContext context, required IconData icon}) {
+    return Container(
+      height: 44,
+      width: 44,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: context.appColors.secondary.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(icon, color: context.appColors.colorBlue, size: 30),
     );
   }
 }

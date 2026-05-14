@@ -100,62 +100,94 @@ class HomeScreenWidget extends StatelessWidget {
         return AppCardWidget(
           cardWidget: Column(
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Column(
                 children: [
-                  AppUtils.rsContainer(context: context),
-                  SizedBox(width: AppConstants.commonHorizontalSpacing),
-                  Flexible(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AppTextHeading(
-                              text: expenses[index].itemName,
-                              fontSize: 20,
-                            ),
-                            AppTextHeading(
-                              text: AppHelper.formatPKR(
-                                int.parse(
-                                      expenses[index].unitPrice.toString(),
-                                    ) *
-                                    int.parse(
-                                      expenses[index].itemQuantity.toString(),
-                                    ),
-                              ),
-                              fontSize: 18,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 4),
-                        AppTextBody(
-                          text: expenses[index].projectName,
-                          fontSize: 14,
-                        ),
-                        SizedBox(height: 4),
-                        Row(
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppUtils.rsContainer(context: context),
+                      SizedBox(width: AppConstants.commonHorizontalSpacing),
+                      Flexible(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            categoryContainer(context, expenses, index),
-                            SizedBox(width: 12),
-                            Icon(
-                              Icons.watch_later_outlined,
-                              color: context.appColors.secondary,
-                            ),
-                            SizedBox(width: 6),
-                            Flexible(
-                              child: AppTextBody(
-                                text: AppHelper.formatDate(
-                                  expenses[index].createdAt,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AppTextHeading(
+                                  text: expenses[index].itemName,
+                                  fontSize: 18,
                                 ),
-                              ),
+                                AppTextHeading(
+                                  text: AppHelper.formatPKR(
+                                    int.parse(
+                                          expenses[index].unitPrice.toString(),
+                                        ) *
+                                        int.parse(
+                                          expenses[index].itemQuantity
+                                              .toString(),
+                                        ),
+                                  ),
+                                  fontSize: 18,
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 4),
+                            AppTextBody(
+                              text: expenses[index].projectName,
+                              fontSize: 14,
+                            ),
+                            SizedBox(height: 4),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                categoryContainer(context, expenses, index),
+                                SizedBox(width: 12),
+                                Flexible(
+                                  child: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.watch_later_outlined,
+                                        color: context.appColors.secondary,
+                                      ),
+                                      SizedBox(width: 6),
+                                      AppTextBody(
+                                        fontSize: 14,
+                                        text: AppHelper.formatDate(
+                                          expenses[index].createdAt,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: AppConstants.commonVerticalSpacing),
+                  Row(
+                    children: [
+                      AppUtils.expenseCard(
+                        context,
+                        "Returns",
+                        expenses[index].returns,
+                      ),
+                      SizedBox(width: 12),
+                      AppUtils.expenseCard(
+                        context,
+                        "Total",
+                        expenses[index].itemQuantity,
+                      ),
+                      SizedBox(width: 12),
+                      AppUtils.expenseCard(
+                        context,
+                        "Availaible",
+                        expenses[index].itemQuantity - expenses[index].returns,
+                      ),
+                    ],
                   ),
                 ],
               ),

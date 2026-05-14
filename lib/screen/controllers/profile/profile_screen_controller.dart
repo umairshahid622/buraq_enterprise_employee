@@ -9,6 +9,8 @@ class ProfileScreenController extends GetxController {
   late final UserController _userController;
   RxBool isLogoutProcessing = false.obs;
 
+    //Todo:  Remove try catch block and Call the method from Base Controller
+
   @override
   void onInit() {
     super.onInit();

@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddExpenseModel {
+  String expenseId;
   String itemName;
   int itemQuantity;
   int unitPrice;
   String additionalNotes;
   String employeeId;
+  int returns;
   String projectId;
   String category;
   String projectName;
@@ -17,11 +19,13 @@ class AddExpenseModel {
   DateTime updatedAt; // ✅ DateTime not Timestamp
 
   AddExpenseModel({
+    required this.expenseId,
     required this.itemName,
     required this.itemQuantity,
     required this.unitPrice,
     required this.additionalNotes,
     required this.employeeId,
+    required this.returns,
     required this.projectId,
     required this.category,
     required this.projectName,
@@ -36,11 +40,13 @@ class AddExpenseModel {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     return AddExpenseModel(
+      expenseId: data['expenseId'] ?? '',
       itemName: data['itemName'] ?? '',
       itemQuantity: data['itemQuantity'] ?? 0,
       unitPrice: data['unitPrice'] ?? 0,
       additionalNotes: data['additionalNotes'] ?? '',
       employeeId: data['employeeId'] ?? '',
+      returns: data['returns'] ?? 0,
       projectId: data['projectId'] ?? '',
       category: data['category'] ?? '',
       projectName: data['projectName'] ?? '',

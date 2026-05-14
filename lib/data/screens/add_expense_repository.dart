@@ -25,15 +25,17 @@ class AddExpenseRepository {
     required File receipt,
   }) async {
     final receiptUrl = await _uploadReceipt(receipt);
-
+    final expenseDocRef = _firestore.collection(collectionPath).doc();
     await FirestoreHelper.call(
-      () => _firestore.collection(collectionPath).doc().set({
+      () => expenseDocRef.set({
+        'expenseId': expenseDocRef.id,
         'itemName': itemName,
         'itemQuantity': itemQuantity,
         'unitPrice': unitPrice,
         'additionalNotes': additionalNotes,
         'employeeId': employeeId,
         'projectId': projectId,
+        'returns': 0,
         'category':category,
         'projectName': projectName,
         'receiptUrl': receiptUrl,
