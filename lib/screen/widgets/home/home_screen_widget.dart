@@ -189,7 +189,7 @@ class HomeScreenWidget extends StatelessWidget {
                       AppUtils.expenseCard(
                         context,
                         "Used",
-                        expenses[index].usedItems
+                        expenses[index].usedItems,
                       ),
                     ],
                   ),
@@ -312,9 +312,6 @@ class HomeScreenWidget extends StatelessWidget {
     int spentBalance,
   ) {
     return AppCardWidget(
-      onTap: () {
-        print(availaibleBalance);
-      },
       cardWidget: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -326,7 +323,7 @@ class HomeScreenWidget extends StatelessWidget {
             ],
           ),
           SizedBox(height: AppConstants.commonVerticalSpacing),
-          AppTextHeading(text: AppHelper.formatPKR(availaibleBalance)),
+          AppTextHeading(text: AppHelper.formatPKR(availaibleBalance), fontSize: 28),
           SizedBox(height: AppConstants.commonVerticalSpacing),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -57,7 +57,7 @@ final appRouter = GoRouter(
                   path: "manage-expense",
                   pageBuilder: (context, state) =>
                       NoTransitionPage(child: ManageExpenseScreenWidget(
-                        expense: state.extra as AddExpenseModel,
+                        expenseItem: state.extra as AddExpenseModel,
                       )),
                 ),
               ],

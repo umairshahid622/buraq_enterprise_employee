@@ -1,32 +1,33 @@
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
+import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
 import 'package:buraq_enterprise_employee/models/add_expense_model.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/home/expense_transaction_screen_controller.dart';
+import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_card_widget.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_scroll_body.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
+import 'package:buraq_enterprise_employee/utils/widgets/app_text_field.dart';
+import 'package:buraq_enterprise_employee/utils/widgets/buttons/app_filled_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class ManageExpenseScreenWidget extends StatelessWidget {
-  final AddExpenseModel expense;
-  const ManageExpenseScreenWidget({super.key, required this.expense});
+  final AddExpenseModel expenseItem;
+  const ManageExpenseScreenWidget({super.key, required this.expenseItem});
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ManageExpenseScreenController>(
-      init: ManageExpenseScreenController(),
+      init: ManageExpenseScreenController(expense: expenseItem),
       builder: (controller) {
-        return AppScrollableBody(
-          child: Column(
-            children: [
-              tabBar(
-                controller: controller,
-                context: context,
-                pages: [useItems(), returnItem()],
-              ),
-            ],
-          ),
+        return tabBar(
+          controller: controller,
+          context: context,
+          pages: [
+            useItems(controller: controller),
+            returnItem(controller: controller),
+          ],
         );
       },
     );
@@ -38,8 +39,12 @@ class ManageExpenseScreenWidget extends StatelessWidget {
     required List<Widget> pages,
   }) {
     const double height = 37;
+    const int duration = 250;
+    const curve = Curves.easeInOut;
+
     return Column(
       children: [
+        // ─── Tab Bar ───────────────────────────────────────
         AppCardWidget(
           verticalPadding: 5,
           horizontalPadding: 5,
@@ -48,13 +53,14 @@ class ManageExpenseScreenWidget extends StatelessWidget {
               final tabWidth = constraints.maxWidth / controller.tabs.length;
               return Stack(
                 children: [
+                  // ✅ Sliding indicator
                   TweenAnimationBuilder<double>(
                     tween: Tween(
                       begin: controller.selectedIndex.toDouble(),
                       end: controller.selectedIndex.toDouble(),
                     ),
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
+                    duration: const Duration(milliseconds: duration),
+                    curve: curve,
                     builder: (context, value, _) {
                       return Positioned(
                         left: value * tabWidth,
@@ -73,6 +79,7 @@ class ManageExpenseScreenWidget extends StatelessWidget {
                       );
                     },
                   ),
+                  // ✅ Tab labels
                   Row(
                     children: List.generate(controller.tabs.length, (index) {
                       final isSelected = controller.selectedIndex == index;
@@ -100,30 +107,165 @@ class ManageExpenseScreenWidget extends StatelessWidget {
           ),
         ),
         SizedBox(height: AppConstants.commonVerticalSpacing),
-        AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
+        Expanded(child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: duration),
           transitionBuilder: (child, animation) {
             final isForward =
                 controller.selectedIndex > controller.previousIndex;
-            final offset = isForward ? const Offset(1, 0) : const Offset(-1, 0);
+            final inOffset = isForward
+                ? const Offset(1, 0)
+                : const Offset(-1, 0);
+            final outOffset = isForward
+                ? const Offset(-1, 0)
+                : const Offset(1, 0);
+            final isIncoming = child.key == ValueKey(controller.selectedIndex);
             return SlideTransition(
               position: Tween<Offset>(
-                begin: offset,
+                begin: isIncoming ? inOffset : outOffset,
                 end: Offset.zero,
-              ).animate(animation),
+              ).animate(CurvedAnimation(parent: animation, curve: curve)),
               child: child,
             );
           },
+          layoutBuilder: (currentChild, previousChildren) => Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              ...previousChildren,
+              if (currentChild != null) currentChild,
+            ],
+          ),
           child: KeyedSubtree(
             key: ValueKey(controller.selectedIndex),
-            child: pages[controller.selectedIndex],
+            child: AppScrollableBody(child: pages[controller.selectedIndex]),
           ),
+        )),
+      ],
+    );
+  }
+
+  Column useItems({
+    required ManageExpenseScreenController controller,
+  }) => Column(
+    children: [
+      AppCardWidget(cardWidget: expenseCard(controller)),
+      SizedBox(height: AppConstants.commonVerticalSpacing),
+      Form(
+        key: controller.useItemKey,
+        child: Column(
+          children: [
+            AppCardWidget(
+              cardWidget: Column(
+                children: [
+                  AppTextField(
+                    controller: controller.useQuanityController,
+                    customValidator: (value){
+                      if (value!.isEmpty) {
+                        return "Quantity to use cannot be empty";
+                      }
+                      if (int.parse(value) > controller.availaibleItems) {
+                        return "Quantity to use cannot be greater than available quantity";
+                      }
+                      return null;
+                    },
+                    labelText: "Quantity to use",
+                    type: TextFieldType.amount,
+                    hintText: "Enter quanity to use",
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: AppConstants.commonVerticalSpacing),
+            AppFilledButton(
+              onPressedCallBack: () => controller.useItemSubmit(),
+              buttonText: "Save Used Quantity",
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
+
+  Column expenseCard(ManageExpenseScreenController controller) {
+    return Column(
+      children: [
+        expenseDetail(title: "Project", value: controller.expense.projectName),
+        SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+        expenseDetail(title: "Item Name", value: controller.expense.itemName),
+        SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+        expenseDetail(
+          title:
+              "Availaible to ${controller.selectedIndex == 0 ? 'Use' : 'Return'}",
+          value: "${controller.availaibleItems} Units",
+        ),
+        SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+        expenseDetail(
+          title: "Unit Price",
+          value: AppHelper.formatPKR(controller.expense.unitPrice),
         ),
       ],
     );
   }
 
-  AppTextHeading returnItem() => AppTextHeading(text: "Return Items");
+  Row expenseDetail({String? title, String? value}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        AppTextBody(text: title ?? ""),
+        AppTextHeading(
+          text: value ?? "",
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
+      ],
+    );
+  }
 
-  AppTextHeading useItems() => AppTextHeading(text: "Used Items");
+  Column returnItem({
+    required ManageExpenseScreenController controller,
+  }) => Column(
+    children: [
+      AppCardWidget(cardWidget: expenseCard(controller)),
+      SizedBox(height: AppConstants.commonVerticalSpacing),
+      Form(
+        key: controller.returnItemKey,
+        child: Column(
+          children: [
+            AppCardWidget(
+              cardWidget: Column(
+                children: [
+                  AppTextField(
+                    controller: controller.returnQuanityController,
+                    labelText: "Quantity to Return",
+                    type: TextFieldType.amount,
+                    hintText: "Enter quanity to use",
+                    customValidator: (value){
+                      if (value!.isEmpty) {
+                        return "Quantity to return cannot be empty";
+                      }
+                      if (int.parse(value) > controller.availaibleItems) {
+                        return "Quantity to return cannot be greater than available quantity";
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+                  AppTextField(
+                    controller: controller.refundAmountController,
+                    labelText: "Refund Amount",
+                    type: TextFieldType.amount,
+                    hintText: "Enter Refund Amount Per Unit",
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: AppConstants.commonVerticalSpacing),
+            AppFilledButton(
+              onPressedCallBack: () => controller.returnItemSubmit(),
+              buttonText: "Submit Return",
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }

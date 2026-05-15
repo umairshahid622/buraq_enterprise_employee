@@ -29,6 +29,7 @@ class AppTextField extends StatefulWidget {
   final FontWeight? fontWeight;
   final FocusNode? focusNode;
   final int? maxLines;
+  final String? Function(String?)? customValidator;
   final Function(String value)? onTextChangeCallBack;
   final Function()? onTapCallBack;
   final Function(KeyEvent event)? onKeyEvent; // 👈 add this
@@ -55,7 +56,7 @@ class AppTextField extends StatefulWidget {
     this.counterText,
     this.fontWeight,
     this.focusNode,
-    this.onKeyEvent, this.maxLines,
+    this.onKeyEvent, this.maxLines, this.customValidator,
   });
 
   @override
@@ -157,9 +158,10 @@ class _AppTextFieldState extends State<AppTextField> {
         } else if (widget.type == TextFieldType.amount) {
           return AppHelper.amountValidator(value: int.tryParse(value ?? ""));
         } else if (widget.type == TextFieldType.otp) {
-          // 👇 otp validation — empty string hides error text but still blocks submit
           if (value == null || value.isEmpty) return '';
           return null;
+        } else if (widget.customValidator != null) {
+          return widget.customValidator!(value);
         } else {
           return null;
         }
@@ -168,7 +170,7 @@ class _AppTextFieldState extends State<AppTextField> {
         fontWeight: widget.fontWeight ?? FontWeight.normal,
         fontSize: widget.type == TextFieldType.otp
             ? 20
-            : null, // 👈 bigger font for otp
+            : null,
       ),
       cursorColor: WidgetStateColor.resolveWith((state) {
         if (state.contains(WidgetState.error)) return appColorScheme.error;

@@ -11,7 +11,7 @@ class AppTextHeading extends StatelessWidget {
   const AppTextHeading({
     super.key,
     required this.text,
-    this.fontSize = 24.0,
+    this.fontSize = 20.0,
     this.fontWeight = FontWeight.bold,
     this.textAlign,
     this.color,
