@@ -5,7 +5,6 @@ import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
 import 'package:buraq_enterprise_employee/models/project_model.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/add_expense/add_expense_screen_controller.dart';
-import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:buraq_enterprise_employee/utils/app_util.dart';
 import 'package:buraq_enterprise_employee/utils/dashed_border_container.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_card_widget.dart';
@@ -99,7 +98,10 @@ class AddExpenseScreenWidget extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: AppConstants.commonVerticalSpacing),
-                        totalCostContainer(context, controller),
+                        AppUtils.totalCostContainer(
+                          amount: () => controller.totalCost.toInt(),
+                          context: context,
+                        ),
                       ],
                     ),
                   ),
@@ -154,7 +156,13 @@ class AddExpenseScreenWidget extends StatelessWidget {
                   SizedBox(height: AppConstants.commonVerticalSpacing),
                   AppFilledButton(
                     isLoading: controller.isLoading.value,
-                    onPressedCallBack: () => controller.addExpense(),
+                    onPressedCallBack: () {
+                      if (!controller.formKey.currentState!.validate()){
+                        AppUtils.showToast(label: "Please fill all the fields", variant: ToastVariants.error);
+                        return;
+                      }
+                      controller.addExpense();
+                    },
                     buttonText: "Save Expense",
                   ),
                   SizedBox(height: AppConstants.commonVerticalSpacing),
@@ -219,7 +227,7 @@ class AddExpenseScreenWidget extends StatelessWidget {
 
         return CustomPaint(
           painter: DashedBorderContainer(
-            color: color.withValues(alpha: 0.75),
+            color: color,
             borderRadius: AppConstants.borderRadius,
             dashPattern: [8, 4],
           ),
@@ -253,13 +261,17 @@ class AddExpenseScreenWidget extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.camera_alt_outlined,
-                            color: hasError? context.appColors.error: Colors.grey,
+                            color: hasError
+                                ? context.appColors.error
+                                : Colors.grey,
                             size: 48,
                           ),
                           SizedBox(height: 16),
                           AppTextHeading(
                             text: "Take photo or upload receipt",
-                            color: hasError? context.appColors.error: context.appColors.text,
+                            color: hasError
+                                ? context.appColors.error
+                                : context.appColors.text,
                             fontSize: 16,
                           ),
                         ],
@@ -318,34 +330,6 @@ class AddExpenseScreenWidget extends StatelessWidget {
       onChanged: (ProjectModel? value) => controller.selectedProject = value,
       hint: "Select Project",
       enabled: true,
-    );
-  }
-
-  Container totalCostContainer(
-    BuildContext context,
-    AddExpenseScreenController controller,
-  ) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-      decoration: BoxDecoration(
-        color: context.appColors.primary.withValues(alpha: 0.03),
-        border: Border.all(
-          color: context.appColors.primary.withValues(alpha: 0.75),
-        ),
-        borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          AppTextBody(text: "Total Cost"),
-          Obx(
-            () => AppTextHeading(
-              text: AppHelper.formatPKR(controller.totalCost.toInt()),
-              fontSize: 18,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

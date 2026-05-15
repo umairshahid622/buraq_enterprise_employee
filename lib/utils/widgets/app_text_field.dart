@@ -151,7 +151,9 @@ class _AppTextFieldState extends State<AppTextField> {
       keyboardType: keyBoardType,
       onChanged: widget.onTextChangeCallBack,
       validator: (value) {
-        if (widget.type == TextFieldType.phoneNumber) {
+        if (widget.customValidator != null) {
+          return widget.customValidator!(value);
+        } else if (widget.type == TextFieldType.phoneNumber) {
           return AppHelper.phoneNumberValidator(value: value ?? "");
         } else if (widget.type == TextFieldType.text) {
           return AppHelper.textValidator(value: value ?? "");
@@ -160,9 +162,7 @@ class _AppTextFieldState extends State<AppTextField> {
         } else if (widget.type == TextFieldType.otp) {
           if (value == null || value.isEmpty) return '';
           return null;
-        } else if (widget.customValidator != null) {
-          return widget.customValidator!(value);
-        } else {
+        }  else {
           return null;
         }
       },

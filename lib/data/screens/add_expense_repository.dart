@@ -35,6 +35,7 @@ class AddExpenseRepository {
         'additionalNotes': additionalNotes,
         'employeeId': employeeId,
         'projectId': projectId,
+        'usedItems': 0,
         'returns': 0,
         'category':category,
         'projectName': projectName,
@@ -65,6 +66,18 @@ class AddExpenseRepository {
     final totalSpent = expenses.fold<double>(0.0, (prev, next) => prev + next.unitPrice * next.itemQuantity);
 
     return (expenses, totalSpent);
+  }
+
+
+  Future<void> updateUsedItems({required String expenseid, required int quantity}){
+    
+    return FirestoreHelper.call(
+      () => _firestore.collection(collectionPath).doc(expenseid).update({
+        'usedItems': FieldValue.increment(-quantity),
+        'updatedAt': FieldValue.serverTimestamp(),
+        'updatedBy': _auth.currentUser!.uid,
+      }),
+    );
   }
 
   Future<String> _uploadReceipt(File file) async {

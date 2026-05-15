@@ -87,7 +87,6 @@ class AddExpenseScreenController extends BaseController {
   }
 
   Future<void> addExpense() async {
-    if (!formKey.currentState!.validate()) return;
     await safeCall(
       () => _addExpenseRepository.addExpense(
         itemName: itemNameController.text.trim(),

@@ -4,9 +4,9 @@ import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_exte
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
 import 'package:buraq_enterprise_employee/utils/app_helper.dart';
-import 'package:buraq_enterprise_employee/utils/widgets/app_spiner.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class AppUtils {
   static Container getNameInitalsContainer({
@@ -222,6 +222,31 @@ class AppUtils {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Icon(icon, color: context.appColors.colorBlue, size: 30),
+    );
+  }
+
+  static Container totalCostContainer ({required int Function() amount, required BuildContext context}) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+      decoration: BoxDecoration(
+        color: context.appColors.primary.withValues(alpha: 0.03),
+        border: Border.all(
+          color: context.appColors.primary,
+        ),
+        borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          AppTextBody(text: "Total Cost"),
+          Obx(
+            () => AppTextHeading(
+              text: AppHelper.formatPKR(amount()),
+              fontSize: 18,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
