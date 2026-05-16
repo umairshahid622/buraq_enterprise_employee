@@ -100,6 +100,7 @@ class AddExpenseScreenWidget extends StatelessWidget {
                           ),
                           SizedBox(height: AppConstants.commonVerticalSpacing),
                           AppUtils.totalCostContainer(
+                            title: "Total Cost",
                             amount: () => controller.totalCost.toInt(),
                             context: context,
                           ),

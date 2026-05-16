@@ -114,6 +114,7 @@ class AppUtils {
     BuildContext context,
     String expenseType,
     int amount, {    
+    bool isMoney = false,
     AppColorScheme? colorScheme,
   }) {
     final colors = colorScheme ?? context.appColors;
@@ -134,7 +135,7 @@ class AppUtils {
                   ),
                   SizedBox(height: 5),
                   AppTextHeading(
-                    text: amount.toString(),
+                    text: isMoney ? AppHelper.formatPKR(amount) : amount.toString(),
                     fontSize: 16,
                   ),
                 ],
@@ -225,7 +226,7 @@ class AppUtils {
     );
   }
 
-  static Container totalCostContainer ({required int Function() amount, required BuildContext context}) {
+  static Container totalCostContainer ({required int Function() amount, required BuildContext context, required String title}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       decoration: BoxDecoration(
@@ -238,7 +239,7 @@ class AppUtils {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          AppTextBody(text: "Total Cost"),
+          AppTextBody(text: title),
           Obx(
             () => AppTextHeading(
               text: AppHelper.formatPKR(amount()),

@@ -17,7 +17,7 @@ class ProjectWithBudget {
   double get remaining => project.remainingBudget.toDouble();
   double get spent => expenses.fold(
     0.0,
-    (sum, e) => sum + (e.unitPrice.toDouble() * e.itemQuantity.toDouble()),
+    (sum, e) => sum + (e.unitPrice.toDouble() * (e.itemQuantity.toDouble() - e.returns.toDouble())),
   );
 
   @override

@@ -1,3 +1,16 @@
+import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart';
+import 'package:buraq_enterprise_employee/core/controllers/theme_controller.dart';
+import 'package:buraq_enterprise_employee/core/controllers/user_controller.dart';
+import 'package:buraq_enterprise_employee/screen/auth/login_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/add_expense/add_expense_screen_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/common/main_layout_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/home/expense_transaction_screen_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/home/home_screen_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/my_stats/my_stats_screen_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/profile/profile_screen_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/splash/splash_screen_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class AppHelper {
@@ -262,7 +275,26 @@ class AppHelper {
     return name.trim()[0];
   }
 
- static String formatDate(DateTime date) {
+  static String formatDate(DateTime date) {
     return DateFormat('MMM dd yyyy').format(date);
+  }
+
+  
+  static void printActiveControllers(){
+    debugPrint("=========================================");
+    debugPrint("   CURRENT ACTIVE GETX CONTROLLERS       ");
+    debugPrint("=========================================");
+    debugPrint("LoginController: ${Get.isRegistered<LoginController>()}");
+    debugPrint("ThemeController: ${Get.isRegistered<ThemeController>()}");
+    debugPrint("SplashController: ${Get.isRegistered<SplashController>()}");
+    debugPrint("ManageExpenseScreenController: ${Get.isRegistered<ManageExpenseScreenController>()}");
+    debugPrint("BaseController: ${Get.isRegistered<BaseController>()}");
+    debugPrint("UserController: ${Get.isRegistered<UserController>()}");
+    debugPrint("MainLayoutDataController: ${Get.isRegistered<MainLayoutDataController>()}");
+    debugPrint("HomeScreenController: ${Get.isRegistered<HomeScreenController>()}");
+    debugPrint("AddExpenseScreenController: ${Get.isRegistered<AddExpenseScreenController>()}");
+    debugPrint("MyStatsScreenController: ${Get.isRegistered<MyStatsScreenController>()}");
+    debugPrint("ProfileScreenController: ${Get.isRegistered<ProfileScreenController>()}");
+    debugPrint("=========================================");
   }
 }

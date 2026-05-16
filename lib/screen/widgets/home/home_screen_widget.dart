@@ -250,6 +250,7 @@ class HomeScreenWidget extends StatelessWidget {
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Flexible(
                     child: AppTextHeading(
@@ -261,7 +262,7 @@ class HomeScreenWidget extends StatelessWidget {
                   AppUtils.statusContainer(
                     context: context,
                     status: project.status,
-                  ),
+                  ),                  
                 ],
               ),
               AppTextBody(text: project.projectId, fontSize: 14),
@@ -312,6 +313,9 @@ class HomeScreenWidget extends StatelessWidget {
     int spentBalance,
   ) {
     return AppCardWidget(
+      onTap: () {
+        AppHelper.printActiveControllers();
+      },
       cardWidget: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -319,11 +323,17 @@ class HomeScreenWidget extends StatelessWidget {
             children: [
               Icon(Icons.wallet_rounded, color: context.appColors.primary),
               SizedBox(width: AppConstants.commonHorizontalSpacing),
-              AppTextBody(text: "Availaible Balance",),
+              AppTextBody(text: "Availaible Balance"),
             ],
           ),
           SizedBox(height: AppConstants.commonVerticalSpacing),
-          AppTextHeading(text: AppHelper.formatPKR(availaibleBalance), fontSize: 28,  color: availaibleBalance < 0? context.appColors.error: context.appColors.text,),
+          AppTextHeading(
+            text: AppHelper.formatPKR(availaibleBalance),
+            fontSize: 28,
+            color: availaibleBalance < 0
+                ? context.appColors.error
+                : context.appColors.text,
+          ),
           SizedBox(height: AppConstants.commonVerticalSpacing),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

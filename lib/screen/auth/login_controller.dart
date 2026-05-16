@@ -46,11 +46,11 @@ class LoginController extends BaseController {
     if (!otpFormKey.currentState!.validate()) return;
     if (verificationId == null || completeOtp.length != otpLength) return;
 
-    final credential = await safeCall(
+    final (credential, success) = await safeCall(
       () => AuthRepository().signInWithOtp(verificationId!, completeOtp),      
     );
 
-    if (credential != null) {
+    if (credential != null && success) {
       final userController = Get.find<UserController>();
       await userController.fetchUserProfile();
     }

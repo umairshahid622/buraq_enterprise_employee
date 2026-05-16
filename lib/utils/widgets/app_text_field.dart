@@ -32,7 +32,7 @@ class AppTextField extends StatefulWidget {
   final String? Function(String?)? customValidator;
   final Function(String value)? onTextChangeCallBack;
   final Function()? onTapCallBack;
-  final Function(KeyEvent event)? onKeyEvent; // 👈 add this
+  final Function(KeyEvent event)? onKeyEvent; 
 
   const AppTextField({
     super.key,
@@ -88,15 +88,18 @@ class _AppTextFieldState extends State<AppTextField> {
     final TextInputType keyBoardType;
     final Widget? defaultPrefixIcon;
     final List<TextInputFormatter>? inputFormatters;
+    final AutovalidateMode? autovalidateMode;
 
     switch (widget.type) {
       case TextFieldType.email:
         keyBoardType = TextInputType.emailAddress;
+        autovalidateMode = AutovalidateMode.disabled;
         inputFormatters = [];
         defaultPrefixIcon = null;
         break;
       case TextFieldType.otp:
         keyBoardType = TextInputType.number;
+        autovalidateMode = AutovalidateMode.disabled;
         inputFormatters = [
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(1), // 👈 otp specific
@@ -105,11 +108,15 @@ class _AppTextFieldState extends State<AppTextField> {
         break;
       case TextFieldType.amount:
         keyBoardType = TextInputType.number;
-        inputFormatters = [];
+        autovalidateMode = AutovalidateMode.onUserInteraction;
+        inputFormatters = [
+          FilteringTextInputFormatter.digitsOnly,
+        ];
         defaultPrefixIcon = null;
         break;
       case TextFieldType.phoneNumber:
         keyBoardType = TextInputType.phone;
+        autovalidateMode = AutovalidateMode.onUnfocus;
         inputFormatters = [
           FilteringTextInputFormatter.digitsOnly,
           LengthLimitingTextInputFormatter(11),
@@ -118,11 +125,13 @@ class _AppTextFieldState extends State<AppTextField> {
         break;      
        case TextFieldType.notes:
         keyBoardType = TextInputType.multiline;
+        autovalidateMode = AutovalidateMode.disabled;
         inputFormatters = [];
         defaultPrefixIcon = null;
         break;
       default:
         keyBoardType = TextInputType.text;
+        autovalidateMode = AutovalidateMode.disabled;
         defaultPrefixIcon = const Icon(Icons.edit);
         inputFormatters = [];
         break;
@@ -132,7 +141,7 @@ class _AppTextFieldState extends State<AppTextField> {
 
     Widget textField = TextFormField(
       maxLines: widget.maxLines,
-      autovalidateMode: AutovalidateMode.onUnfocus,
+      autovalidateMode: autovalidateMode,
       inputFormatters: inputFormatters,
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();

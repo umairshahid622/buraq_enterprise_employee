@@ -172,6 +172,9 @@ class ManageExpenseScreenWidget extends StatelessWidget {
                       if (value!.isEmpty) {
                         return "Quantity to use cannot be empty";
                       }
+                      if (int.tryParse(value) == 0) {
+                        return "Quantity to use should be greater than 0";
+                      }
                       if (int.parse(value) > controller.availaibleItems) {
                         return "Quantity to use should be less than ${controller.availaibleItems + 1}";
                       }
@@ -256,13 +259,18 @@ class ManageExpenseScreenWidget extends StatelessWidget {
               cardWidget: Column(
                 children: [
                   AppTextField(
+                    
                     controller: controller.returnQuanityController,
                     labelText: "Quantity to Return",
                     type: TextFieldType.amount,
                     hintText: "Enter quanity to return",
+                    
                     customValidator: (value) {
                       if (value!.isEmpty) {
                         return "Quantity to return cannot be empty";
+                      }
+                      if (int.tryParse(value) == 0) {
+                        return "Quantity to return should be greater than 0";
                       }
                       if (int.parse(value) > controller.availaibleItems) {
                         return "Quantity to return should be less than ${controller.availaibleItems + 1}";
@@ -270,25 +278,9 @@ class ManageExpenseScreenWidget extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: AppConstants.commonVerticalSpacing / 2),
-                  AppTextField(
-                    controller: controller.refundAmountController,
-                    labelText: "Refund Amount",
-                    type: TextFieldType.amount,
-                    customValidator: (value) {
-                      if (value!.isEmpty) {
-                        return "Refund amount cannot be empty";
-                      }
-                      if (int.parse(value) >
-                          int.parse(controller.expense.unitPrice.toString())) {
-                        return "Refund amount should be less than ${controller.expense.unitPrice + 1}";
-                      }
-                      return null;
-                    },
-                    hintText: "Enter Refund Amount Per Unit",
-                  ),
-                  SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+                  SizedBox(height: AppConstants.commonVerticalSpacing / 2),                                    
                   AppUtils.totalCostContainer(
+                    title: "Refundable Amount",
                     amount: () => controller.totalCost,
                     context: context,
                   ),
@@ -298,7 +290,18 @@ class ManageExpenseScreenWidget extends StatelessWidget {
             SizedBox(height: AppConstants.commonVerticalSpacing),
             AppFilledButton(
               isLoading: controller.isLoading.value,
-              onPressedCallBack: () => controller.returnItemSubmit(),
+              onPressedCallBack: () async{
+                final success = await controller.returnItemSubmit();
+                if (context.mounted) {
+                  context.pop();
+                }
+                AppUtils.showToast(
+                  label: success
+                      ? "Item Returned Successfully"
+                      : "Failed to save return item",
+                  variant: success ? ToastVariants.success : ToastVariants.error,
+                );
+              },
               buttonText: "Submit Return",
             ),
           ],

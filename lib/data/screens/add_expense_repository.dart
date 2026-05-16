@@ -63,7 +63,7 @@ class AddExpenseRepository {
         .map((doc) => AddExpenseModel.fromSnapshot(doc))
         .toList();
     
-    final totalSpent = expenses.fold<double>(0.0, (prev, next) => prev + next.unitPrice * next.itemQuantity);
+    final totalSpent = expenses.fold<double>(0.0, (prev, next) => prev + next.unitPrice * (next.itemQuantity - next.returns));
 
     return (expenses, totalSpent);
   }
@@ -73,7 +73,17 @@ class AddExpenseRepository {
     
     return FirestoreHelper.call(
       () => _firestore.collection(collectionPath).doc(expenseid).update({
-        'usedItems': FieldValue.increment(-quantity),
+        'usedItems': FieldValue.increment(quantity),
+        'updatedAt': FieldValue.serverTimestamp(),
+        'updatedBy': _auth.currentUser!.uid,
+      }),
+    );
+  }
+  Future<void> returnItems({required String expenseid, required int quantity}){
+    
+    return FirestoreHelper.call(
+      () => _firestore.collection(collectionPath).doc(expenseid).update({
+        'returns': FieldValue.increment(quantity),
         'updatedAt': FieldValue.serverTimestamp(),
         'updatedBy': _auth.currentUser!.uid,
       }),

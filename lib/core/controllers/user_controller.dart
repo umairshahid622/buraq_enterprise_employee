@@ -2,6 +2,8 @@ import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart'
 import 'package:buraq_enterprise_employee/data/auth/auth_repository.dart';
 import 'package:buraq_enterprise_employee/data/auth/employee_repository.dart';
 import 'package:buraq_enterprise_employee/models/user_model.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/add_expense/add_expense_screen_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/common/main_layout_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
@@ -55,6 +57,7 @@ class UserController extends BaseController {
   }
 
   Future<void> signOut() async {
+    Get.deleteAll();
     await safeCall(() => _authRepo.signOut());
     _user.value = null;
   }
