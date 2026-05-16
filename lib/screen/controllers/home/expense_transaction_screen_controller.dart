@@ -1,6 +1,7 @@
 
 import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart';
 import 'package:buraq_enterprise_employee/data/screens/add_expense_repository.dart';
+import 'package:buraq_enterprise_employee/data/screens/manage_expense_repository.dart';
 import 'package:buraq_enterprise_employee/models/add_expense_model.dart';
 
 import 'package:flutter/widgets.dart';
@@ -14,6 +15,7 @@ class ManageExpenseScreenController extends BaseController {
 
   //repositories
   final AddExpenseRepository _addExpenseRepository = AddExpenseRepository();
+  final ManageExpenseRepository _manageExpenseRepository = ManageExpenseRepository();
 
   //vairbales
   final List<String> tabs = ["Use Item", "Return Item"];
@@ -60,13 +62,26 @@ class ManageExpenseScreenController extends BaseController {
   Future<bool> useItemSubmit()  async{
     if (!useItemKey.currentState!.validate()) return false;
 
-    final (result, success) = await safeCall(
+    final (updateUseItemresult, updateUseItemSuccess) = await safeCall(
       () => _addExpenseRepository.updateUsedItems(
         expenseid: expense.expenseId,
         quantity: int.parse(useQuanityController.text.trim()),
       ),
     );
-    return success;
+
+    final (useItemLogResult, useItemLogSuccess) = await safeCall(
+      () => _manageExpenseRepository.manageItemsLog(
+        returnItem: false,
+        expenseId: expense.expenseId,
+        employeeId: expense.employeeId,
+        projectId: expense.projectId,
+        itemName: expense.itemName,
+        itemCategory: expense.category,
+        quantity: int.parse(useQuanityController.text.trim()),
+        additionalNotes: expense.additionalNotes,
+      ),
+    );
+    return updateUseItemSuccess && useItemLogSuccess;
   }
 
   Future<bool> returnItemSubmit() async {
@@ -77,7 +92,20 @@ class ManageExpenseScreenController extends BaseController {
         quantity: int.parse(returnQuanityController.text.trim()),
       ),
     );
-    return success;
+
+    final (useItemLogResult, useItemLogSuccess) = await safeCall(
+      () => _manageExpenseRepository.manageItemsLog(
+        returnItem: true,
+        expenseId: expense.expenseId,
+        employeeId: expense.employeeId,
+        projectId: expense.projectId,
+        itemName: expense.itemName,
+        itemCategory: expense.category,
+        quantity: int.parse(returnQuanityController.text.trim()),
+        additionalNotes: expense.additionalNotes,
+      ),
+    );
+    return success && useItemLogSuccess;
   }
 
   int get totalCost => _totalCost.value;

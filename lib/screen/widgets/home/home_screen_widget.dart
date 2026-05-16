@@ -118,9 +118,11 @@ class HomeScreenWidget extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                AppTextHeading(
-                                  text: expenses[index].itemName,
-                                  fontSize: 18,
+                                Flexible(
+                                  child: AppTextHeading(
+                                    text: "${expenses[index].itemName} (${expenses[index].itemQuantity})",
+                                    fontSize: 18,
+                                  ),
                                 ),
                                 AppTextHeading(
                                   text: AppHelper.formatPKR(
@@ -182,8 +184,10 @@ class HomeScreenWidget extends StatelessWidget {
                       SizedBox(width: 12),
                       AppUtils.expenseCard(
                         context,
-                        "Total",
-                        expenses[index].itemQuantity,
+                        "Available",
+                        expenses[index].itemQuantity -
+                            expenses[index].usedItems -
+                            expenses[index].returns,
                       ),
                       SizedBox(width: 12),
                       AppUtils.expenseCard(
@@ -262,7 +266,7 @@ class HomeScreenWidget extends StatelessWidget {
                   AppUtils.statusContainer(
                     context: context,
                     status: project.status,
-                  ),                  
+                  ),
                 ],
               ),
               AppTextBody(text: project.projectId, fontSize: 14),
