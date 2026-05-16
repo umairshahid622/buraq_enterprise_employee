@@ -219,7 +219,7 @@ class HomeScreenWidget extends StatelessWidget {
     int index,
   ) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
       decoration: BoxDecoration(
         color: context.appColors.primary.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(15),
@@ -227,6 +227,7 @@ class HomeScreenWidget extends StatelessWidget {
       child: AppTextBody(
         text: expenses[index].category,
         color: context.appColors.primary,
+        fontWeight: FontWeight.w600,
         fontSize: 12,
       ),
     );
