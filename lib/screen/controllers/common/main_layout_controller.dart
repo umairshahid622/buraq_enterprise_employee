@@ -60,7 +60,7 @@ class MainLayoutDataController extends BaseController {
     final empId = _userController.userRx.value?.empId;
     if (empId == null || empId.isEmpty) return;
 
-    final results = await safeCall(
+    final (result, success) = await safeCall(
       () => Future.wait([
         _allocatedAmountRepository.getAllocatedAmount(employeeId: empId),
         _addExpenseRepository.fetchExpenses(employeeId: empId),
@@ -68,17 +68,17 @@ class MainLayoutDataController extends BaseController {
       ]),
     );
 
-    if (results != null) {
-      final (list, total) = results[0] as (List<AllocatedAmountModel>, double);
+    if (success && result != null) {
+      final (list, total) = result[0] as (List<AllocatedAmountModel>, double);
       _allocatedAmounts = list;
       _totalAllocatedAmount = total;
 
       final (expenseList, totalExpense) =
-          results[1] as (List<AddExpenseModel>, double);
+          result[1] as (List<AddExpenseModel>, double);
       _expenses = expenseList;
       _spentAmount = totalExpense;
 
-      _projects = results[2] as List<ProjectModel>;
+      _projects = result[2] as List<ProjectModel>;
       _projectsWithBudget = _joinProjectsWithBudget();
       update();
     }

@@ -7,16 +7,17 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 abstract class BaseController extends GetxController {
   final RxBool isLoading = false.obs;
-  Future<T?> safeCall<T>(Future<T> Function() action) async {
+  Future<(T?, bool)> safeCall<T>(Future<T> Function() action) async {
     isLoading.value = true;
     update();
     try {
-      return await action();
+      final result = await action();
+      return (result, true);
     } catch (e) {
       String error = AppHelper.getFirebaseErrorMessage(message: e.toString());
       print("error:::: $e");
       AppUtils.showToast(label: error, variant: ToastVariants.error);
-      return null;
+      return (null, false);
     } finally {
       isLoading.value = false;
       update();

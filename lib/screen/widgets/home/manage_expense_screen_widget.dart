@@ -187,13 +187,15 @@ class ManageExpenseScreenWidget extends StatelessWidget {
             SizedBox(height: AppConstants.commonVerticalSpacing),
             AppFilledButton(
               onPressedCallBack: () async {
-                await controller.useItemSubmit();
+                final success = await controller.useItemSubmit();
                 if (context.mounted) {
                   context.pop();
                 }
                 AppUtils.showToast(
-                  label: "Item Used Saved Successfully",
-                  variant: ToastVariants.success,
+                  label: success
+                      ? "Item Used Saved Successfully"
+                      : "Failed to save item usage",
+                  variant: success ? ToastVariants.success : ToastVariants.error,
                 );
               },
               buttonText: "Save Used Quantity",

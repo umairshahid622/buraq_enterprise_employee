@@ -60,17 +60,16 @@ class ManageExpenseScreenController extends BaseController {
     update();
   }
 
-  Future<void> useItemSubmit()  async{
-    if (!useItemKey.currentState!.validate()) return;
+  Future<bool> useItemSubmit()  async{
+    if (!useItemKey.currentState!.validate()) return false;
 
-    await safeCall(
+    final (result, success) = await safeCall(
       () => _addExpenseRepository.updateUsedItems(
         expenseid: expense.expenseId,
         quantity: int.parse(useQuanityController.text.trim()),
       ),
     );
-
-    
+    return success;
   }
 
   void returnItemSubmit() {

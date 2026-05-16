@@ -19,8 +19,7 @@ class AddExpenseScreenController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-    _dataController =
-        Get.find<MainLayoutDataController>();
+    _dataController = Get.find<MainLayoutDataController>();
   }
 
   final TextEditingController itemNameController = TextEditingController();
@@ -35,6 +34,8 @@ class AddExpenseScreenController extends BaseController {
 
   final ImagePicker _picker = ImagePicker();
   Rx<File?> selectedImage = Rx<File?>(null);
+
+  VoidCallback? resetReceiptField;
 
   final ValueNotifier<ProjectModel?> projectNotifier = ValueNotifier(null);
   final ValueNotifier<String?> categoryNotifier = ValueNotifier(null);
@@ -87,7 +88,7 @@ class AddExpenseScreenController extends BaseController {
   }
 
   Future<void> addExpense() async {
-    await safeCall(
+    final (result, success) = await safeCall(
       () => _addExpenseRepository.addExpense(
         itemName: itemNameController.text.trim(),
         itemQuantity: int.parse(itemQuantityController.text.trim()),
@@ -100,7 +101,7 @@ class AddExpenseScreenController extends BaseController {
         receipt: selectedImage.value!,
       ),
     );
-    onSucessExpenseAdded();
+    if (success) onSucessExpenseAdded();
   }
 
   void onSucessExpenseAdded() {
@@ -111,18 +112,24 @@ class AddExpenseScreenController extends BaseController {
     );
   }
 
-  void clearValues() {
-    projectNotifier.value = null;
-    categoryNotifier.value = null;
-    // controlllers
+  void clearValues() {    
+
     itemNameController.clear();
     itemQuantityController.clear();
     unitPriceController.clear();
+    unitPriceController.clear();
     additionalNotesController.clear();
+    projectNotifier.value = null;
+    categoryNotifier.value = null;
     totalCost.value = 0;
     removeImage();
 
-    formKey.currentState?.reset();
+    update();
+
+    // ✅ Reset AFTER rebuild so formKey.currentState points to new form
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      formKey.currentState?.reset();
+    });
   }
 
   removeImage() {
@@ -130,9 +137,7 @@ class AddExpenseScreenController extends BaseController {
     update();
   }
 
-  List<ProjectModel> get projects=>_dataController.projects;
-
-
+  List<ProjectModel> get projects => _dataController.projects;
 
   @override
   void dispose() {

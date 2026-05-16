@@ -11,6 +11,12 @@ class AppTheme {
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppColorScheme.light.background,
 
+
+    colorScheme: const ColorScheme.light().copyWith(
+      primary: AppColorScheme.light.primary,
+      onPrimary: AppColorScheme.light.background,
+    ),
+
     appBarTheme: AppBarTheme(
       elevation: 0,
       scrolledUnderElevation: 0,
@@ -18,6 +24,7 @@ class AppTheme {
       backgroundColor: AppColorScheme.light.background,
       foregroundColor: AppColorScheme.light.text,
     ),
+
 
     checkboxTheme: CheckboxThemeData(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -80,6 +87,8 @@ class AppTheme {
       todayBorder: BorderSide(color: AppColorScheme.light.primary),
     ),
 
+  
+
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       elevation: 1,
       backgroundColor: AppColorScheme.light.background,
@@ -98,6 +107,12 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColorScheme.dark.background,
+
+
+    colorScheme: const ColorScheme.dark().copyWith(
+      primary: AppColorScheme.dark.primary,
+      onPrimary: AppColorScheme.dark.background,
+    ),
 
     appBarTheme: AppBarTheme(
       elevation: 0,

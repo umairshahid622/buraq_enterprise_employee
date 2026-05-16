@@ -41,132 +41,137 @@ class AddExpenseScreenWidget extends StatelessWidget {
           centerContent: true,
           child: Skeletonizer(
             enabled: controller.isLoading.value,
-            child: Form(
-              key: controller.formKey,
-              child: Column(
-                children: [
-                  AppCardWidget(
-                    cardWidget: Column(
-                      children: [
-                        projectDropDown(controller),
-                        SizedBox(height: AppConstants.commonVerticalSpacing),
-                        categoryDropDown(controller),
-                      ],
+            child: SizedBox(
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  children: [
+                    AppCardWidget(
+                      cardWidget: Column(
+                        children: [
+                          projectDropDown(controller),
+                          SizedBox(height: AppConstants.commonVerticalSpacing),
+                          categoryDropDown(controller),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: AppConstants.commonVerticalSpacing),
-                  AppCardWidget(
-                    cardWidget: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppTextHeading(text: "Item Details"),
-                        SizedBox(height: AppConstants.commonVerticalSpacing),
-                        AppTextField(
-                          controller: controller.itemNameController,
-                          hintText: "e.g Cement Bags",
-                          labelText: "Item Name",
-                        ),
-                        SizedBox(height: AppConstants.commonVerticalSpacing),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Flexible(
-                              child: AppTextField(
-                                controller: controller.unitPriceController,
-                                hintText: "0",
-                                labelText: "Unit Price",
-                                type: TextFieldType.amount,
-                                onTextChangeCallBack: (value) {
-                                  controller.calculateTotalCost();
-                                },
+                    SizedBox(height: AppConstants.commonVerticalSpacing),
+                    AppCardWidget(
+                      cardWidget: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppTextHeading(text: "Item Details"),
+                          SizedBox(height: AppConstants.commonVerticalSpacing),
+                          AppTextField(
+                            controller: controller.itemNameController,
+                            hintText: "e.g Cement Bags",
+                            labelText: "Item Name",
+                          ),
+                          SizedBox(height: AppConstants.commonVerticalSpacing),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                child: AppTextField(
+                                  controller: controller.unitPriceController,
+                                  hintText: "0",
+                                  labelText: "Unit Price",
+                                  type: TextFieldType.amount,
+                                  onTextChangeCallBack: (value) {
+                                    controller.calculateTotalCost();
+                                  },
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: AppConstants.commonHorizontalSpacing,
-                            ),
-                            Flexible(
-                              child: AppTextField(
-                                controller: controller.itemQuantityController,
-                                hintText: "0",
-                                labelText: "Quantity",
-                                onTextChangeCallBack: (value) {
-                                  controller.calculateTotalCost();
-                                },
-                                type: TextFieldType.amount,
+                              SizedBox(
+                                width: AppConstants.commonHorizontalSpacing,
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: AppConstants.commonVerticalSpacing),
-                        AppUtils.totalCostContainer(
-                          amount: () => controller.totalCost.toInt(),
-                          context: context,
-                        ),
-                      ],
+                              Flexible(
+                                child: AppTextField(
+                                  controller: controller.itemQuantityController,
+                                  hintText: "0",
+                                  labelText: "Quantity",
+                                  onTextChangeCallBack: (value) {
+                                    controller.calculateTotalCost();
+                                  },
+                                  type: TextFieldType.amount,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: AppConstants.commonVerticalSpacing),
+                          AppUtils.totalCostContainer(
+                            amount: () => controller.totalCost.toInt(),
+                            context: context,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: AppConstants.commonVerticalSpacing),
-                  AppCardWidget(
-                    cardWidget: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppTextHeading(text: "Recipt"),
-                        SizedBox(height: AppConstants.commonVerticalSpacing),
-                        buildReceiptUploader(
-                          context: context,
-                          validator: (value) {
-                            if (value == null) {
-                              return "Image is required";
-                            }
-                            return null;
-                          },
-                          controller: controller,
-                        ),
-                        controller.selectedImage.value != null
-                            ? SizedBox(
-                                height: AppConstants.commonVerticalSpacing,
-                              )
-                            : SizedBox.shrink(),
-                        controller.selectedImage.value != null
-                            ? AppFilledButton(
-                                backgroundeColor: context.appColors.error,
-                                buttonText: "Remove Image",
-                                onPressedCallBack: () =>
-                                    controller.removeImage(),
-                              )
-                            : SizedBox.shrink(),
-                      ],
+                    SizedBox(height: AppConstants.commonVerticalSpacing),
+                    AppCardWidget(
+                      cardWidget: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppTextHeading(text: "Recipt"),
+                          SizedBox(height: AppConstants.commonVerticalSpacing),
+                          buildReceiptUploader(
+                            context: context,
+                            validator: (value) {
+                              if (value == null) {
+                                return "Image is required";
+                              }
+                              return null;
+                            },
+                            controller: controller,
+                          ),
+                          controller.selectedImage.value != null
+                              ? SizedBox(
+                                  height: AppConstants.commonVerticalSpacing,
+                                )
+                              : SizedBox.shrink(),
+                          controller.selectedImage.value != null
+                              ? AppFilledButton(
+                                  backgroundeColor: context.appColors.error,
+                                  buttonText: "Remove Image",
+                                  onPressedCallBack: () =>
+                                      controller.removeImage(),
+                                )
+                              : SizedBox.shrink(),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: AppConstants.commonVerticalSpacing),
-                  AppCardWidget(
-                    cardWidget: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AppTextField(
-                          controller: controller.additionalNotesController,
-                          hintText: "Additional notes (optional)",
-                          labelText: "Additional Notes",
-                          maxLines: 4,
-                          type: TextFieldType.notes,
-                        ),
-                      ],
+                    SizedBox(height: AppConstants.commonVerticalSpacing),
+                    AppCardWidget(
+                      cardWidget: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppTextField(
+                            controller: controller.additionalNotesController,
+                            hintText: "Additional notes (optional)",
+                            labelText: "Additional Notes",
+                            maxLines: 4,
+                            type: TextFieldType.notes,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: AppConstants.commonVerticalSpacing),
-                  AppFilledButton(
-                    isLoading: controller.isLoading.value,
-                    onPressedCallBack: () {
-                      if (!controller.formKey.currentState!.validate()){
-                        AppUtils.showToast(label: "Please fill all the fields", variant: ToastVariants.error);
-                        return;
-                      }
-                      controller.addExpense();
-                    },
-                    buttonText: "Save Expense",
-                  ),
-                  SizedBox(height: AppConstants.commonVerticalSpacing),
-                ],
+                    SizedBox(height: AppConstants.commonVerticalSpacing),
+                    AppFilledButton(
+                      isLoading: controller.isLoading.value,
+                      onPressedCallBack: () {
+                        if (!controller.formKey.currentState!.validate()) {
+                          AppUtils.showToast(
+                            label: "Please fill all the fields",
+                            variant: ToastVariants.error,
+                          );
+                          return;
+                        }
+                        controller.addExpense();
+                      },
+                      buttonText: "Save Expense",
+                    ),
+                    SizedBox(height: AppConstants.commonVerticalSpacing),
+                  ],
+                ),
               ),
             ),
           ),
@@ -219,7 +224,12 @@ class AddExpenseScreenWidget extends StatelessWidget {
     return FormField<File>(
       validator: (_) => validator?.call(controller.selectedImage.value),
       autovalidateMode: AutovalidateMode.onUserInteraction,
+
       builder: (FormFieldState<File> state) {
+        controller.resetReceiptField = () {
+          state.didChange(null);
+          state.reset();
+        };
         final bool hasError = state.hasError;
         final Color color = hasError
             ? context.appColors.error

@@ -42,11 +42,11 @@ class UserController extends BaseController {
   // Fetch profile
   // -------------------------------
   Future<void> fetchUserProfile() async {
-    final data = await safeCall(
+    final (data, success) = await safeCall(
       () => _employeeRepository.getEmployeeData(),
     );
 
-    if (data != null) {
+    if (success && data != null) {
       _user.value = data;
     } else {
       _user.value = null;
