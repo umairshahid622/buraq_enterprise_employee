@@ -42,7 +42,7 @@ class _MainLayoutState extends State<MainLayout> {
 
   void _updateTitles() {
     final location = GoRouterState.of(context).uri.toString();
-    final mainRoutes = ['/home', '/add-expense', '/returns', '/profile'];
+    final mainRoutes = ['/home', '/add-expense', '/my-stats', '/profile'];
     _isNestedRoute = !mainRoutes.contains(location);
 
     final titles = {
@@ -55,8 +55,8 @@ class _MainLayoutState extends State<MainLayout> {
         "subHeading": "Record your purchase details",
       },
       mainRoutes[2]: {
-        "heading": "Returns & Refunds",
-        "subHeading": "Return unused materials to shopkeeper",
+        "heading": "My Statistics",
+        "subHeading": "Your spending insights and trends",
       },
       mainRoutes[3]: {
         "heading": "Profile & Settings",
@@ -131,9 +131,7 @@ class _MainLayoutState extends State<MainLayout> {
     BuildContext context,
     void Function(int index) onItemTapped,
   ) {
-    return BottomNavigationBar(
-      selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
-      unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
+    return BottomNavigationBar(      
       currentIndex: widget.navigationShell.currentIndex,
       onTap: onItemTapped,
       items: const [
@@ -145,7 +143,7 @@ class _MainLayoutState extends State<MainLayout> {
           icon: Icon(Icons.add_circle_outline),
           label: 'Add Expense',
         ),
-        BottomNavigationBarItem(icon: Icon(Icons.refresh), label: 'Returns'),
+        BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: 'My Stats'),
         BottomNavigationBarItem(
           icon: Icon(Icons.account_circle_outlined),
           label: 'Profile',

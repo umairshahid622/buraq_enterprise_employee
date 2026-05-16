@@ -20,7 +20,7 @@ class HomeScreenWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MainLayoutDataController>(
-      init: MainLayoutDataController(),
+      init: Get.find<MainLayoutDataController>(),
       builder: (controller) {
         int allocatedBalance = controller.allocatedAmount.toInt();
         int spentBalance = controller.spentAmount.toInt();

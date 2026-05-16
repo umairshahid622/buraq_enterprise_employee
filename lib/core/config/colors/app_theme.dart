@@ -196,7 +196,7 @@ class AppTheme {
       unselectedItemColor: AppColorScheme.dark.secondary,
       selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
       unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
-      type: BottomNavigationBarType.fixed,
+      type: BottomNavigationBarType.fixed,      
       showSelectedLabels: true,
       showUnselectedLabels: true,
     ),

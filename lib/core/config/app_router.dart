@@ -11,7 +11,7 @@ import 'package:buraq_enterprise_employee/screen/widgets/add_expense/add_expense
 import 'package:buraq_enterprise_employee/screen/widgets/home/manage_expense_screen_widget.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/home/home_screen_widget.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/profile/profile_screen_widget.dart';
-import 'package:buraq_enterprise_employee/screen/widgets/returns/returns_screen_widget.dart';
+import 'package:buraq_enterprise_employee/screen/widgets/my_stats/my_stats_screen.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/splash/splash_screen_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -76,9 +76,9 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/returns',
+              path: '/my-stats',
               pageBuilder: (context, state) =>
-                  NoTransitionPage(child: ReturnsScreenWidget()),
+                  NoTransitionPage(child: MyStatsScreenWidget()),
               
             ),
           ],
