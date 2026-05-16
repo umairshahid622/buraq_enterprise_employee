@@ -168,6 +168,7 @@ class ManageExpenseScreenWidget extends StatelessWidget {
                 children: [
                   AppTextField(
                     controller: controller.useQuanityController,
+                    enabled: controller.availaibleItems != 0,
                     customValidator: (value) {
                       if (value!.isEmpty) {
                         return "Quantity to use cannot be empty";
@@ -190,6 +191,13 @@ class ManageExpenseScreenWidget extends StatelessWidget {
             SizedBox(height: AppConstants.commonVerticalSpacing),
             AppFilledButton(
               onPressedCallBack: () async {
+                if (controller.availaibleItems == 0) {
+                  AppUtils.showToast(
+                    label: "No items to use",
+                    variant: ToastVariants.error,
+                  );
+                  return;
+                }
                 final success = await controller.useItemSubmit();
                 if (context.mounted) {
                   context.pop();
@@ -210,18 +218,21 @@ class ManageExpenseScreenWidget extends StatelessWidget {
   );
 
   Column expenseCard(ManageExpenseScreenController controller) {
+    double spacing = AppConstants.commonVerticalSpacing / 3;
     return Column(
       children: [
         expenseDetail(title: "Project", value: controller.expense.projectName),
-        SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+        SizedBox(height: spacing),
         expenseDetail(title: "Item Name", value: controller.expense.itemName),
-        SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+        SizedBox(height: spacing),
         expenseDetail(
           title:
               "Availaible to ${controller.selectedIndex == 0 ? 'Use' : 'Return'}",
           value: "${controller.availaibleItems} Units",
         ),
-        SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+        SizedBox(height: spacing),
+        expenseDetail(title: "Total ${controller.selectedIndex == 0 ? 'Used' : 'Returns'} Items", value: "${controller.selectedIndex == 0 ? controller.expense.usedItems : controller.expense.returns}"),
+        SizedBox(height: spacing),
         expenseDetail(
           title: "Unit Price",
           value: AppHelper.formatPKR(controller.expense.unitPrice),
@@ -259,7 +270,7 @@ class ManageExpenseScreenWidget extends StatelessWidget {
               cardWidget: Column(
                 children: [
                   AppTextField(
-                    
+                    enabled: controller.availaibleItems != 0,
                     controller: controller.returnQuanityController,
                     labelText: "Quantity to Return",
                     type: TextFieldType.amount,
@@ -291,6 +302,13 @@ class ManageExpenseScreenWidget extends StatelessWidget {
             AppFilledButton(
               isLoading: controller.isLoading.value,
               onPressedCallBack: () async{
+                if (controller.availaibleItems == 0) {
+                  AppUtils.showToast(
+                    label: "No items to return",
+                    variant: ToastVariants.error,
+                  );
+                  return;
+                }
                 final success = await controller.returnItemSubmit();
                 if (context.mounted) {
                   context.pop();
