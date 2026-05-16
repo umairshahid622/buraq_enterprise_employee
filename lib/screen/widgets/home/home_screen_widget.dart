@@ -29,12 +29,14 @@ class HomeScreenWidget extends StatelessWidget {
         final List<ProjectWithBudget> projectsWithBudget =
             controller.projectsWithBudget;
         final List<AddExpenseModel> expenses = controller.expenses;
+        final bool isLoading =
+            controller.isLoading.value || !controller.hasLoadedData;
         return RefreshIndicator(
           onRefresh: () {
             return controller.fetchData();
           },
           child: Skeletonizer(
-            enabled: controller.isLoading.value,
+            enabled: isLoading,
             child: AppScrollableBody(
               child: Column(
                 children: [
@@ -45,7 +47,7 @@ class HomeScreenWidget extends StatelessWidget {
                     spentBalance,
                   ),
                   SizedBox(height: AppConstants.commonVerticalSpacing),
-                  projectsWithBudget.isNotEmpty
+                  isLoading || projectsWithBudget.isNotEmpty
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -54,10 +56,12 @@ class HomeScreenWidget extends StatelessWidget {
                           ],
                         )
                       : SizedBox.shrink(),
-                  projectsWithBudget.isNotEmpty
+                  isLoading || projectsWithBudget.isNotEmpty
                       ? SizedBox(height: AppConstants.commonVerticalSpacing / 2)
                       : SizedBox.shrink(),
-                  projectsWithBudget.isEmpty
+                  isLoading
+                      ? projectListSkeleton()
+                      : projectsWithBudget.isEmpty
                       ? AppUtils.noDataFound(
                           context: context,
                           heading: "No projects available",
@@ -120,7 +124,8 @@ class HomeScreenWidget extends StatelessWidget {
                               children: [
                                 Flexible(
                                   child: AppTextHeading(
-                                    text: "${expenses[index].itemName} (${expenses[index].itemQuantity})",
+                                    text:
+                                        "${expenses[index].itemName} (${expenses[index].itemQuantity})",
                                     fontSize: 18,
                                   ),
                                 ),
@@ -297,6 +302,67 @@ class HomeScreenWidget extends StatelessWidget {
                   ),
                   AppTextBody(
                     text: '${AppHelper.formatPKR(leftBudget)} Left',
+                    color: context.appColors.colorGreen,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+      separatorBuilder: (context, index) =>
+          SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+    );
+  }
+
+  ListView projectListSkeleton() {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: 3,
+      itemBuilder: (context, index) {
+        return AppCardWidget(
+          verticalPadding: AppConstants.padding,
+          cardWidget: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: AppTextHeading(
+                      text: "Project placeholder",
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(width: AppConstants.commonHorizontalSpacing),
+                  AppUtils.statusContainer(context: context, status: "active"),
+                ],
+              ),
+              AppTextBody(text: "PROJECT-000", fontSize: 14),
+              SizedBox(height: AppConstants.commonVerticalSpacing),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppTextBody(text: "Budget Used"),
+                  AppTextBody(text: '75%', color: context.appColors.text),
+                ],
+              ),
+              SizedBox(height: AppConstants.commonVerticalSpacing / 4),
+              LinearProgressIndicator(
+                borderRadius: BorderRadius.circular(12),
+                value: 0.75,
+                minHeight: 6.5,
+                backgroundColor: context.appColors.borderColor,
+              ),
+              SizedBox(height: AppConstants.commonVerticalSpacing / 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppTextBody(text: "PKR 75,000 Spent"),
+                  AppTextBody(
+                    text: 'PKR 25,000 Left',
                     color: context.appColors.colorGreen,
                   ),
                 ],

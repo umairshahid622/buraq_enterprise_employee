@@ -31,24 +31,20 @@ class MainLayoutDataController extends BaseController {
   List<AllocatedAmountModel> _allocatedAmounts = [];
   List<ProjectWithBudget> _projectsWithBudget = [];
   List<AddExpenseModel> _expenses = [];
+  bool _hasLoadedData = false;
 
   @override
   void onInit() {
     super.onInit();
     _userController = Get.find<UserController>();
 
-    print("user at onInit: ${_userController.user?.empId}"); // 👈
-
     if (_userController.user?.empId.isNotEmpty == true) {
-      print("taking early path"); // 👈
       fetchData();
       return;
     }
 
-    print("registering ever()"); // 👈
     Worker? worker;
     worker = ever<UserModel?>(_userController.userRx, (UserModel? user) {
-      print("ever fired: ${user?.empId}"); // 👈
       if (user != null && user.empId.isNotEmpty) {
         fetchData();
         worker?.dispose();
@@ -80,8 +76,10 @@ class MainLayoutDataController extends BaseController {
 
       _projects = result[2] as List<ProjectModel>;
       _projectsWithBudget = _joinProjectsWithBudget();
-      update();
     }
+
+    _hasLoadedData = true;
+    update();
   }
 
   Future<List<ProjectModel>> _fetchProjects(String empId) async {
@@ -98,7 +96,6 @@ class MainLayoutDataController extends BaseController {
     for (final e in _expenses) {
       expensesMap.putIfAbsent(e.projectId, () => []).add(e);
     }
-    print("Join Called");
 
     return _projects.map((project) {
       return ProjectWithBudget(
@@ -116,4 +113,5 @@ class MainLayoutDataController extends BaseController {
   List<ProjectWithBudget> get projectsWithBudget => _projectsWithBudget;
   List<AddExpenseModel> get expenses => _expenses;
   UserModel? get user => _userController.user;
+  bool get hasLoadedData => _hasLoadedData;
 }
