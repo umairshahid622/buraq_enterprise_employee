@@ -480,16 +480,18 @@ class AppUtils {
     required Function() onSubmitCallBack,
     Function()? onCancelCallBack,
     required bool Function() isLoading,
+    bool barrierDismissible = true,
     
     required IconData icon,
     required String title,
     required String message,
     required String subMessage,
     required String submitButtonText,
+    String? cancelButtonText,
   }) async {
     await showDialog(
-      barrierDismissible: true,
-
+      barrierDismissible: barrierDismissible,
+      barrierColor: context.appColors.colorBlue.withValues(alpha: 0.1),
       context: context,
       builder: (dialogContext) {
         return Dialog(
@@ -552,7 +554,7 @@ class AppUtils {
                     Expanded(
                       child: AppFilledButton(
                         onPressedCallBack: onCancelCallBack,
-                        buttonText: "Cancel",
+                        buttonText: cancelButtonText?? "Cancel",
                         backgroundeColor: context.appColors.secondary,
                       ),
                     ),

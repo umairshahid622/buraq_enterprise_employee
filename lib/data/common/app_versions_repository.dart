@@ -8,15 +8,15 @@ class AppVersionsRepository {
   final String collectionPath = 'versions';
   final String appName = 'employee';
 
-  Stream<VersionModel> versionStream() {
+  Future<VersionModel> getVersion() async {
     final platform = Platform.isAndroid ? 'android' : 'ios';
     final docId =
-        'employeeApp_$platform'; // → "employeeApp_android" or "employeeApp_ios"
+        'employeeApp_$platform';
 
     return _firestore
-        .collection('versions')
+        .collection(collectionPath)
         .doc(docId)
-        .snapshots()
-        .map((doc) => VersionModel.fromSnapshot(doc));
+        .get()
+        .then((doc) => VersionModel.fromSnapshot(doc));
   }
 }
