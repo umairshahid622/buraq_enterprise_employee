@@ -13,18 +13,24 @@ class CategorySpend {
 
 class MyStatsScreenController extends BaseController {
   late final MainLayoutDataController _mainLayoutController;
+  Worker? _loadingWorker;
 
   @override
   void onInit() {
     super.onInit();
     _mainLayoutController = Get.find<MainLayoutDataController>();
+    _loadingWorker = ever<bool>(_mainLayoutController.isLoading, (_) {
+      update();
+    });
     if (!_mainLayoutController.hasLoadedData) {
       refreshStats();
     }
   }
 
   Future<void> refreshStats() async {
-    await _mainLayoutController.fetchData();
+    final fetchFuture = _mainLayoutController.fetchData();
+    update();
+    await fetchFuture;
     update();
   }
 
@@ -93,5 +99,11 @@ class MyStatsScreenController extends BaseController {
     final quantityAfterReturns = expense.itemQuantity - expense.returns;
     return expense.unitPrice.toDouble() *
         quantityAfterReturns.clamp(0, 1 << 31).toDouble();
+  }
+
+  @override
+  void onClose() {
+    _loadingWorker?.dispose();
+    super.onClose();
   }
 }
