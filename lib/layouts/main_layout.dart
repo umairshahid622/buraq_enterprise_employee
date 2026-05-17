@@ -68,6 +68,12 @@ class _MainLayoutState extends State<MainLayout> {
       _heading = 'Manage Expense';
       _headingFontSize = 20;
       _subHeading = null;
+    } 
+    else if(location.startsWith('/home/view-all')){
+      final extra = GoRouterState.of(context).extra as Map<String, dynamic>;
+      _heading = 'All ${extra['isProject'] ? "Projects" : "Expenses"}';
+      _headingFontSize = 20;
+      _subHeading = null;
     } else {
       _heading = titles[location]?["heading"] ?? "";
       _subHeading = titles[location]?["subHeading"];

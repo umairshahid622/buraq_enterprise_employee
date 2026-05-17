@@ -10,9 +10,11 @@ import 'package:buraq_enterprise_employee/screen/auth/login_screen.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/add_expense/add_expense_screen_widget.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/home/manage_expense_screen_widget.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/home/home_screen_widget.dart';
+import 'package:buraq_enterprise_employee/screen/widgets/home/view_all_screen.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/profile/profile_screen_widget.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/my_stats/my_stats_screen.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/splash/splash_screen_widget.dart';
+import 'package:buraq_enterprise_employee/utils/classes/project_with_budget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -42,7 +44,8 @@ final appRouter = GoRouter(
       builder: (context, state, navigationShell) {
         return MainLayout(
           key: ValueKey(state.uri.toString()),
-          navigationShell: navigationShell);
+          navigationShell: navigationShell,
+        );
       },
 
       branches: [
@@ -55,10 +58,29 @@ final appRouter = GoRouter(
               routes: [
                 GoRoute(
                   path: "manage-expense",
-                  pageBuilder: (context, state) =>
-                      NoTransitionPage(child: ManageExpenseScreenWidget(
-                        expenseItem: state.extra as AddExpenseModel,
-                      )),
+                  pageBuilder: (context, state) => NoTransitionPage(
+                    child: ManageExpenseScreenWidget(
+                      expenseItem: state.extra as AddExpenseModel,
+                    ),
+                  ),
+                ),
+                GoRoute(
+                  path: "view-all",
+                  pageBuilder: (context, state) {
+                    final extra = state.extra as Map<String, dynamic>;
+                    final bool isProject = extra['isProject'] as bool;
+                    return NoTransitionPage(
+                      child: ViewAllScreen(
+                        isProject: isProject,
+                        projectWithBudget: isProject
+                            ? extra['projects'] as List<ProjectWithBudget>
+                            : null,
+                        expenses: isProject
+                            ? null
+                            : extra['expenses'] as List<AddExpenseModel>,
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
@@ -79,7 +101,6 @@ final appRouter = GoRouter(
               path: '/my-stats',
               pageBuilder: (context, state) =>
                   NoTransitionPage(child: MyStatsScreenWidget()),
-              
             ),
           ],
         ),
@@ -89,7 +110,6 @@ final appRouter = GoRouter(
               path: '/profile',
               pageBuilder: (context, state) =>
                   NoTransitionPage(child: ProfileScreenWidget()),
-              
             ),
           ],
         ),

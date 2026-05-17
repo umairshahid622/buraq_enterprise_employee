@@ -52,22 +52,31 @@ class HomeScreenWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AppTextHeading(text: "My Projects", fontSize: 16),
-                            AppTextButton(buttonText: "View All"),
+                            AppTextButton(
+                              buttonText: "View All",
+                              onPressedCallBack: () {
+                                context.push(
+                                  "/home/view-all",
+                                  extra: {
+                                    'isProject': true,
+                                    'projects': projectsWithBudget,
+                                  },
+                                );
+                              },
+                            ),
                           ],
                         )
                       : SizedBox.shrink(),
                   isLoading || projectsWithBudget.isNotEmpty
                       ? SizedBox(height: AppConstants.commonVerticalSpacing / 2)
                       : SizedBox.shrink(),
-                  isLoading
-                      ? projectListSkeleton()
-                      : projectsWithBudget.isEmpty
+                  isLoading || projectsWithBudget.isEmpty
                       ? AppUtils.noDataFound(
                           context: context,
                           heading: "No projects available",
                           subHeading: "Ask you admin to assign you a project",
                         )
-                      : projectList(controller),
+                      : AppUtils.projectList(projects:controller.projectsWithBudget,projectLength: 2),
                   SizedBox(height: AppConstants.commonVerticalSpacing / 2),
                   expenses.isNotEmpty
                       ? Row(
@@ -77,7 +86,18 @@ class HomeScreenWidget extends StatelessWidget {
                               text: "Recent Expenses",
                               fontSize: 16,
                             ),
-                            AppTextButton(buttonText: "View All"),
+                            AppTextButton(
+                              buttonText: "View All",
+                              onPressedCallBack: () {
+                                context.push(
+                                  "/home/view-all",
+                                  extra: {
+                                    'isProject': false,
+                                    'expenses': expenses,
+                                  },
+                                );
+                              },
+                            ),
                           ],
                         )
                       : SizedBox.shrink(),
@@ -85,7 +105,7 @@ class HomeScreenWidget extends StatelessWidget {
                       ? SizedBox(height: AppConstants.commonVerticalSpacing / 2)
                       : SizedBox.shrink(),
                   expenses.isNotEmpty
-                      ? expenseList(expenses)
+                      ? AppUtils.expenseList(expenses: expenses,expenseLength: 2)
                       : SizedBox.shrink(),
                 ],
               ),
@@ -93,287 +113,6 @@ class HomeScreenWidget extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-
-  ListView expenseList(List<AddExpenseModel> expenses) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: expenses.length,
-      itemBuilder: (context, index) {
-        return AppCardWidget(
-          onTap: () {
-            context.push("/home/manage-expense", extra: expenses[index]);
-          },
-          cardWidget: Column(
-            children: [
-              Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      AppUtils.rsContainer(context: context),
-                      SizedBox(width: AppConstants.commonHorizontalSpacing),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: AppTextHeading(
-                                    text:
-                                        "${expenses[index].itemName} (${expenses[index].itemQuantity})",
-                                    fontSize: 18,
-                                  ),
-                                ),
-                                AppTextHeading(
-                                  text: AppHelper.formatPKR(
-                                    int.parse(
-                                          expenses[index].unitPrice.toString(),
-                                        ) *
-                                        int.parse(
-                                          expenses[index].itemQuantity
-                                              .toString(),
-                                        ),
-                                  ),
-                                  fontSize: 18,
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 4),
-                            AppTextBody(
-                              text: expenses[index].projectName,
-                              fontSize: 14,
-                            ),
-                            SizedBox(height: 4),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                categoryContainer(context, expenses, index),
-                                SizedBox(width: 12),
-                                Flexible(
-                                  child: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.watch_later_outlined,
-                                        color: context.appColors.secondary,
-                                      ),
-                                      SizedBox(width: 6),
-                                      AppTextBody(
-                                        fontSize: 14,
-                                        text: AppHelper.formatDate(
-                                          expenses[index].createdAt,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: AppConstants.commonVerticalSpacing),
-                  Row(
-                    children: [
-                      AppUtils.expenseCard(
-                        context,
-                        "Returns",
-                        expenses[index].returns,
-                      ),
-                      SizedBox(width: 12),
-                      AppUtils.expenseCard(
-                        context,
-                        "Available",
-                        expenses[index].itemQuantity -
-                            expenses[index].usedItems -
-                            expenses[index].returns,
-                      ),
-                      SizedBox(width: 12),
-                      AppUtils.expenseCard(
-                        context,
-                        "Used",
-                        expenses[index].usedItems,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-      separatorBuilder: (context, index) =>
-          SizedBox(height: AppConstants.commonVerticalSpacing / 2),
-    );
-  }
-
-  Container categoryContainer(
-    BuildContext context,
-    List<AddExpenseModel> expenses,
-    int index,
-  ) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 12),
-      decoration: BoxDecoration(
-        color: context.appColors.primary.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: AppTextBody(
-        text: expenses[index].category,
-        color: context.appColors.primary,
-        fontWeight: FontWeight.w600,
-        fontSize: 12,
-      ),
-    );
-  }
-
-  ListView projectList(MainLayoutDataController controller) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: controller.projectsWithBudget.length,
-      itemBuilder: (context, index) {
-        final ProjectWithBudget projectWithBudget =
-            controller.projectsWithBudget[index];
-
-        final project = projectWithBudget.project;
-        final allocatedAmount = projectWithBudget.allocatedAmount;
-
-        final totalBudget = allocatedAmount?.amount.toInt() ?? 0;
-
-        final int spentBudget = projectWithBudget.spent.toInt();
-        final leftBudget = totalBudget - spentBudget;
-        final double progressValue = AppHelper.calculatePercentage(
-          spentBudget,
-          totalBudget,
-        );
-        return AppCardWidget(
-          verticalPadding: AppConstants.padding,
-          cardWidget: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: AppTextHeading(
-                      text: project.projectName,
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(width: AppConstants.commonHorizontalSpacing),
-                  AppUtils.statusContainer(
-                    context: context,
-                    status: project.status,
-                  ),
-                ],
-              ),
-              AppTextBody(text: project.projectId, fontSize: 14),
-              SizedBox(height: AppConstants.commonVerticalSpacing),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppTextBody(text: "Budget Used"),
-                  AppTextBody(
-                    text: '$progressValue%',
-                    color: context.appColors.text,
-                  ),
-                ],
-              ),
-              SizedBox(height: AppConstants.commonVerticalSpacing / 4),
-              LinearProgressIndicator(
-                borderRadius: BorderRadius.circular(12),
-                value: progressValue / 100,
-                minHeight: 6.5,
-                backgroundColor: context.appColors.borderColor,
-              ),
-              SizedBox(height: AppConstants.commonVerticalSpacing / 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppTextBody(
-                    text: "${AppHelper.formatPKR(spentBudget)} Spent",
-                  ),
-                  AppTextBody(
-                    text: '${AppHelper.formatPKR(leftBudget)} Left',
-                    color: context.appColors.colorGreen,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-      separatorBuilder: (context, index) =>
-          SizedBox(height: AppConstants.commonVerticalSpacing / 2),
-    );
-  }
-
-  ListView projectListSkeleton() {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: 3,
-      itemBuilder: (context, index) {
-        return AppCardWidget(
-          verticalPadding: AppConstants.padding,
-          cardWidget: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    child: AppTextHeading(
-                      text: "Project placeholder",
-                      fontSize: 18,
-                    ),
-                  ),
-                  SizedBox(width: AppConstants.commonHorizontalSpacing),
-                  AppUtils.statusContainer(context: context, status: "active"),
-                ],
-              ),
-              AppTextBody(text: "PROJECT-000", fontSize: 14),
-              SizedBox(height: AppConstants.commonVerticalSpacing),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppTextBody(text: "Budget Used"),
-                  AppTextBody(text: '75%', color: context.appColors.text),
-                ],
-              ),
-              SizedBox(height: AppConstants.commonVerticalSpacing / 4),
-              LinearProgressIndicator(
-                borderRadius: BorderRadius.circular(12),
-                value: 0.75,
-                minHeight: 6.5,
-                backgroundColor: context.appColors.borderColor,
-              ),
-              SizedBox(height: AppConstants.commonVerticalSpacing / 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AppTextBody(text: "PKR 75,000 Spent"),
-                  AppTextBody(
-                    text: 'PKR 25,000 Left',
-                    color: context.appColors.colorGreen,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-      separatorBuilder: (context, index) =>
-          SizedBox(height: AppConstants.commonVerticalSpacing / 2),
     );
   }
 
