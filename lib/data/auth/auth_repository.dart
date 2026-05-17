@@ -29,6 +29,14 @@ class AuthRepository {
     if (adminExist) {
       throw Exception('This number is registered as an admin account.');
     }
+    
+    final employeeExist = await _employeeRepository.checkEmployeeExist(
+      phoneNumber: formattedPhone,
+    );
+    
+    if (!employeeExist) {
+      throw Exception('This number is not registered as an employee account.');
+    }
 
     // ✅ wrap Auth call in AuthHelper
     await AuthHelper.call(() async {

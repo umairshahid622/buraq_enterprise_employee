@@ -56,4 +56,15 @@ class EmployeeRepository {
     );
     return snapShot.docs.isNotEmpty;
   }
+  
+  Future<bool> checkEmployeeExist({required String phoneNumber}) async {
+    final QuerySnapshot snapShot = await FirestoreHelper.call(
+      () => _firestore
+          .collection(collectionPath)
+          .where('phone', isEqualTo: phoneNumber)
+          .limit(1)
+          .get(),
+    );
+    return snapShot.docs.isNotEmpty;
+  }
 }

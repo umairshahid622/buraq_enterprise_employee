@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "1043662167505",
-    "project_id": "buraq-enterprise",
-    "storage_bucket": "buraq-enterprise.firebasestorage.app"
+    "project_number": "896313894476",
+    "project_id": "buraq-enterprise-614b3",
+    "storage_bucket": "buraq-enterprise-614b3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1043662167505:android:1ba73819484e1c8e7e14f0",
+        "mobilesdk_app_id": "1:896313894476:android:62d6588bc19aefda2876e9",
         "android_client_info": {
-          "package_name": "com.example.buraq_enterprise"
+          "package_name": "com.example.buraq_enterprise_admin"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBzm1nPK5gkBT3H3J3b4hRoLVbG_pXGEz4"
+          "current_key": "AIzaSyCHD5xQqi6PS2gZ8yuEK-ySaompylcjkhk"
         }
       ],
       "services": {
@@ -26,15 +26,15 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1043662167505:android:9b0ddbee7c9223fd7e14f0",
+        "mobilesdk_app_id": "1:896313894476:android:99205cf8704d95f22876e9",
         "android_client_info": {
-          "package_name": "com.example.buraq_enterprise_admin"
+          "package_name": "com.example.buraq_enterprise_employee"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBzm1nPK5gkBT3H3J3b4hRoLVbG_pXGEz4"
+          "current_key": "AIzaSyCHD5xQqi6PS2gZ8yuEK-ySaompylcjkhk"
         }
       ],
       "services": {

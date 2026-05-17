@@ -21,6 +21,15 @@ class SplashController extends GetxController {
     _userController = Get.find<UserController>();
   }
 
+  Future<void> seedVersionData() async {
+    try {
+    _versionRepo.seedVersionData();
+      
+    } catch (e) {
+      debugPrint("SEEDING ERROR $e");
+    }
+  }
+
   Future<void> checkVersion(BuildContext context) async {
     if (_hasStartedVersionCheck) return;
     _hasStartedVersionCheck = true;
@@ -55,7 +64,7 @@ class SplashController extends GetxController {
             : "A new version is available. We recommend updating.",
         subMessage: "Version : ${version.currentVersion} is available.",
         submitButtonText: "Update Now",
-        barrierDismissible: false,      
+        barrierDismissible: false,
         cancelButtonText: "Later",
         onCancelCallBack: version.forceUpdate
             ? null

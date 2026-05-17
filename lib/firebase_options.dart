@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBzm1nPK5gkBT3H3J3b4hRoLVbG_pXGEz4',
-    appId: '1:1043662167505:android:9b0ddbee7c9223fd7e14f0',
-    messagingSenderId: '1043662167505',
-    projectId: 'buraq-enterprise',
-    storageBucket: 'buraq-enterprise.firebasestorage.app',
+    apiKey: 'AIzaSyCHD5xQqi6PS2gZ8yuEK-ySaompylcjkhk',
+    appId: '1:896313894476:android:99205cf8704d95f22876e9',
+    messagingSenderId: '896313894476',
+    projectId: 'buraq-enterprise-614b3',
+    storageBucket: 'buraq-enterprise-614b3.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDLmnwQyttOsJA3YO-MmOhYeV0U4h4jn84',
-    appId: '1:1043662167505:ios:b5abcf30919d8ef57e14f0',
-    messagingSenderId: '1043662167505',
-    projectId: 'buraq-enterprise',
-    storageBucket: 'buraq-enterprise.firebasestorage.app',
-    iosBundleId: 'com.example.buraqEnterpriseAdmin',
+    apiKey: 'AIzaSyDLdCiHYimQ-vK8b_y9nPbdKtHXJTGsuwc',
+    appId: '1:896313894476:ios:0a79796a46c07c7f2876e9',
+    messagingSenderId: '896313894476',
+    projectId: 'buraq-enterprise-614b3',
+    storageBucket: 'buraq-enterprise-614b3.firebasestorage.app',
+    iosBundleId: 'com.example.buraqEnterpriseEmployee',
   );
+
 }
