@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 class LoginController extends BaseController {
   final phoneNumberController = TextEditingController();
   final RxBool otpLoading = false.obs;
+  final RxBool verifyNumberLoading = false.obs;
+
 
   String? _verificationId;
   String? get verificationId => _verificationId;
@@ -31,6 +33,7 @@ class LoginController extends BaseController {
     if (!formKey.currentState!.validate()) {
       return;
     }
+    verifyNumberLoading.value = true;
     await safeCall(
       () => AuthRepository().verifyPhoneNumber(
         phoneNumber: phoneNumberController.text,
@@ -40,16 +43,17 @@ class LoginController extends BaseController {
         },
       ),
     );
+    verifyNumberLoading.value = false;
   }
 
   Future<void> verifyOtp() async {
     if (!otpFormKey.currentState!.validate()) return;
     if (verificationId == null || completeOtp.length != otpLength) return;
-
+    otpLoading.value = true;
     final (credential, success) = await safeCall(
       () => AuthRepository().signInWithOtp(verificationId!, completeOtp),      
     );
-
+    otpLoading.value = false;
     if (credential != null && success) {
       final userController = Get.find<UserController>();
       await userController.fetchUserProfile();
