@@ -4,7 +4,6 @@ import 'package:buraq_enterprise_employee/utils/app_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/config/app_session.dart';
@@ -56,11 +55,14 @@ class SplashController extends GetxController {
             : "A new version is available. We recommend updating.",
         subMessage: "Version : ${version.currentVersion} is available.",
         submitButtonText: "Update Now",
-        barrierDismissible: version.forceUpdate,
+        barrierDismissible: false,      
         cancelButtonText: "Later",
         onCancelCallBack: version.forceUpdate
             ? null
-            : () => {context.pop(), _bootstrap()},
+            : () {
+                Navigator.of(context, rootNavigator: true).pop();
+                _bootstrap();
+              },
       );
 
       return;

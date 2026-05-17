@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
           key: controller.formKey,
           child: Column(
             children: [
-              _peopleIcon(context: context),
+              _appIcon(context: context),
               SizedBox(height: spacing),
               AppTextHeading(text: "Employee Login"),
               SizedBox(height: spacing),
@@ -61,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _peopleIcon({required BuildContext context}) {
+  Widget _appIcon({required BuildContext context}) {
     final colors = context.appColors;
     return Container(
       padding: const EdgeInsets.all(14),
@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
         color: colors.primary,
       ),
       child: const Icon(
-        Icons.add_moderator_outlined,
+        Icons.construction_rounded,
         size: 40,
         color: AppColors.darkBg,
       ),
@@ -95,14 +95,17 @@ class _LoginScreenState extends State<LoginScreen> {
           controller.verifyPhoneNumber((verId) {
             if (!context.mounted) return;
             showModalBottomSheet(
-              backgroundColor: Colors.transparent,
+              
+              backgroundColor: Colors.black.withValues(alpha: 0.25),
+              barrierColor: Colors.transparent,
+              elevation: 10.0,
               context: context,
               isDismissible: true,
               builder: (BuildContext context) {
                 return OtpBottomSheetWidget();
               },
             ).whenComplete(() {
-              controller.clearOtp();
+              controller.resetOtpFlow();
             });
           });
         },

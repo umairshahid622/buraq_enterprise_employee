@@ -1,5 +1,7 @@
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
+import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/splash/splash_screen_controller.dart';
+import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
 
@@ -21,9 +23,15 @@ class SplashScreenWidget extends GetView<SplashController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.bolt_rounded,
+              Icons.construction_rounded,
               size: screenHeight * 0.175,
               color: context.appColors.primary,
+            ),
+            SizedBox(height: AppConstants.commonVerticalSpacing),
+            AppTextHeading(
+              text: "Buraq Enterprise Employee",
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
           ],
         ),

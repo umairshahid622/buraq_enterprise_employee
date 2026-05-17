@@ -1,4 +1,3 @@
-
 import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart';
 import 'package:buraq_enterprise_employee/data/auth/auth_repository.dart';
 import 'package:buraq_enterprise_employee/core/controllers/user_controller.dart';
@@ -9,7 +8,6 @@ class LoginController extends BaseController {
   final phoneNumberController = TextEditingController();
   final RxBool otpLoading = false.obs;
   final RxBool verifyNumberLoading = false.obs;
-
 
   String? _verificationId;
   String? get verificationId => _verificationId;
@@ -33,17 +31,23 @@ class LoginController extends BaseController {
     if (!formKey.currentState!.validate()) {
       return;
     }
+    if (verifyNumberLoading.value) return;
+
     verifyNumberLoading.value = true;
-    await safeCall(
-      () => AuthRepository().verifyPhoneNumber(
-        phoneNumber: phoneNumberController.text,
-        onCodeSent: (verId) {
-          _verificationId = verId;
-          onCodeSent?.call(verId);
-        },
-      ),
-    );
-    verifyNumberLoading.value = false;
+    try {
+      await safeCall(
+        () => AuthRepository().verifyPhoneNumber(
+          phoneNumber: phoneNumberController.text,
+          onCodeSent: (verId) {
+            _verificationId = verId;
+            verifyNumberLoading.value = false;
+            onCodeSent?.call(verId);
+          },
+        ),
+      );
+    } finally {
+      verifyNumberLoading.value = false;
+    }
   }
 
   Future<void> verifyOtp() async {
@@ -51,7 +55,7 @@ class LoginController extends BaseController {
     if (verificationId == null || completeOtp.length != otpLength) return;
     otpLoading.value = true;
     final (credential, success) = await safeCall(
-      () => AuthRepository().signInWithOtp(verificationId!, completeOtp),      
+      () => AuthRepository().signInWithOtp(verificationId!, completeOtp),
     );
     otpLoading.value = false;
     if (credential != null && success) {
@@ -67,6 +71,13 @@ class LoginController extends BaseController {
     for (var node in otpFocusNodes) {
       node.unfocus();
     }
+  }
+
+  void resetOtpFlow() {
+    _verificationId = null;
+    otpLoading.value = false;
+    verifyNumberLoading.value = false;
+    clearOtp();
   }
 
   @override

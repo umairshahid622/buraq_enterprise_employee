@@ -481,7 +481,7 @@ class AppUtils {
     Function()? onCancelCallBack,
     required bool Function() isLoading,
     bool barrierDismissible = true,
-    
+
     required IconData icon,
     required String title,
     required String message,
@@ -491,7 +491,7 @@ class AppUtils {
   }) async {
     await showDialog(
       barrierDismissible: barrierDismissible,
-      barrierColor: context.appColors.colorBlue.withValues(alpha: 0.1),
+      barrierColor: Colors.black.withValues(alpha: 0.5),
       context: context,
       builder: (dialogContext) {
         return Dialog(
@@ -507,7 +507,7 @@ class AppUtils {
               vertical: AppConstants.padding * 2,
             ),
             decoration: BoxDecoration(
-              color: context.appColors.background,
+              color: dialogContext.appColors.background,
               borderRadius: BorderRadius.circular(AppConstants.borderRadius),
             ),
             child: Column(
@@ -538,7 +538,7 @@ class AppUtils {
                   fontWeight: FontWeight.w500,
                   textAlign: TextAlign.center,
                 ),
-                if(subMessage.isNotEmpty) ... [
+                if (subMessage.isNotEmpty) ...[
                   SizedBox(height: AppConstants.commonVerticalSpacing),
                   AppTextBody(
                     text: subMessage,
@@ -550,15 +550,15 @@ class AppUtils {
                 SizedBox(height: AppConstants.commonVerticalSpacing),
                 Row(
                   children: [
-                    if(onCancelCallBack != null) ... [
-                    Expanded(
-                      child: AppFilledButton(
-                        onPressedCallBack: onCancelCallBack,
-                        buttonText: cancelButtonText?? "Cancel",
-                        backgroundeColor: context.appColors.secondary,
+                    if (onCancelCallBack != null) ...[
+                      Expanded(
+                        child: AppFilledButton(
+                          onPressedCallBack: onCancelCallBack,
+                          buttonText: cancelButtonText ?? "Cancel",
+                          backgroundeColor: context.appColors.secondary,
+                        ),
                       ),
-                    ),
-                    SizedBox(width: 12),
+                      SizedBox(width: 12),
                     ],
                     Expanded(
                       child: Obx(

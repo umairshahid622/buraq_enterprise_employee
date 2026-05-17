@@ -4,6 +4,8 @@ import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 class AuthRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final EmployeeRepository _employeeRepository = EmployeeRepository();
@@ -37,11 +39,10 @@ class AuthRepository {
           if (!completer.isCompleted) completer.complete();
         },
         verificationFailed: (FirebaseAuthException e) {
+          debugPrint("verificationFailed error: $e");
           if (!completer.isCompleted) {
             completer.completeError(
-              Exception(
-                AppHelper.getFirebaseErrorMessage(message: e.code),
-              ),
+              Exception(AppHelper.getFirebaseErrorMessage(message: e.code)),
             );
           }
         },
@@ -54,14 +55,18 @@ class AuthRepository {
         },
       );
 
-      await completer.future;
+      await completer.future.timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException(
+            'Phone verification timed out. Please try again.',
+          );
+        },
+      );
     });
   }
 
-  Future<UserCredential> signInWithOtp(
-    String verId,
-    String smsCode,
-  ) async {
+  Future<UserCredential> signInWithOtp(String verId, String smsCode) async {
     // ✅ wrap in AuthHelper — no manual try/catch
     return await AuthHelper.call(() async {
       final credential = PhoneAuthProvider.credential(
