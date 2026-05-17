@@ -8,6 +8,7 @@ import 'package:buraq_enterprise_employee/utils/app_helper.dart';
 import 'package:buraq_enterprise_employee/utils/classes/project_with_budget.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_card_widget.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
+import 'package:buraq_enterprise_employee/utils/widgets/buttons/app_filled_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -260,11 +261,14 @@ class AppUtils {
     );
   }
 
-  static ListView projectList({required List<ProjectWithBudget> projects, int? projectLength}) {
+  static ListView projectList({
+    required List<ProjectWithBudget> projects,
+    int? projectLength,
+  }) {
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount:projectLength?.clamp(0, projectLength) ?? projects.length,
+      itemCount: projectLength?.clamp(0, projectLength) ?? projects.length,
       itemBuilder: (context, index) {
         final ProjectWithBudget projectWithBudget = projects[index];
 
@@ -295,10 +299,7 @@ class AppUtils {
                     ),
                   ),
                   SizedBox(width: AppConstants.commonHorizontalSpacing),
-                  statusContainer(
-                    context: context,
-                    status: project.status,
-                  ),
+                  statusContainer(context: context, status: project.status),
                 ],
               ),
               AppTextBody(text: project.projectId, fontSize: 14),
@@ -362,11 +363,14 @@ class AppUtils {
     );
   }
 
-  static ListView expenseList({required List<AddExpenseModel> expenses, int? expenseLength}) {
+  static ListView expenseList({
+    required List<AddExpenseModel> expenses,
+    int? expenseLength,
+  }) {
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount:expenseLength?.clamp(0, expenseLength)??expenses.length,
+      itemCount: expenseLength?.clamp(0, expenseLength) ?? expenses.length,
       itemBuilder: (context, index) {
         return AppCardWidget(
           onTap: () {
@@ -447,11 +451,7 @@ class AppUtils {
                   SizedBox(height: AppConstants.commonVerticalSpacing),
                   Row(
                     children: [
-                      expenseCard(
-                        context,
-                        "Returns",
-                        expenses[index].returns,
-                      ),
+                      expenseCard(context, "Returns", expenses[index].returns),
                       SizedBox(width: 12),
                       expenseCard(
                         context,
@@ -461,11 +461,7 @@ class AppUtils {
                             expenses[index].returns,
                       ),
                       SizedBox(width: 12),
-                      expenseCard(
-                        context,
-                        "Used",
-                        expenses[index].usedItems,
-                      ),
+                      expenseCard(context, "Used", expenses[index].usedItems),
                     ],
                   ),
                 ],
@@ -476,6 +472,92 @@ class AppUtils {
       },
       separatorBuilder: (context, index) =>
           SizedBox(height: AppConstants.commonVerticalSpacing / 2),
+    );
+  }
+
+  static Future<void> appDialog({
+    required BuildContext context,
+    required Function() onSubmitCallBack,
+    required Function() onCancelCallBack,
+    required bool Function() isLoading,
+  }) async {
+    await showDialog(
+      barrierDismissible: true,
+
+      context: context,
+      builder: (dialogContext) {
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(
+            horizontal: AppConstants.padding + 4,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+          ),
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppConstants.padding,
+              vertical: AppConstants.padding * 2,
+            ),
+            decoration: BoxDecoration(
+              color: context.appColors.background,
+              borderRadius: BorderRadius.circular(AppConstants.borderRadius),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 64,
+                  height: 64,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: context.appColors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.logout,
+                    color: context.appColors.chipColor,
+                    size: 42,
+                  ),
+                ),
+                SizedBox(height: AppConstants.commonVerticalSpacing),
+                AppTextHeading(text: "Log Out?", fontSize: 24),
+                SizedBox(height: AppConstants.commonVerticalSpacing),
+                AppTextBody(
+                  text:
+                      "Are you sure you want to logout? Any unsaved data will be lost.",
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: AppConstants.commonVerticalSpacing),
+                Row(
+                  children: [
+                    Expanded(
+                      child: AppFilledButton(
+                        onPressedCallBack: onCancelCallBack,
+                        buttonText: "Cancel",
+                        backgroundeColor: context.appColors.secondary,
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: Obx(
+                        () => AppFilledButton(
+                          isLoading: isLoading(),
+                          onPressedCallBack: onSubmitCallBack,
+                          buttonText: "Logout",
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

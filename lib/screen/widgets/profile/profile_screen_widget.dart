@@ -9,6 +9,7 @@ import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/buttons/app_filled_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreenWidget extends StatelessWidget {
   const ProfileScreenWidget({super.key});
@@ -26,13 +27,23 @@ class ProfileScreenWidget extends StatelessWidget {
               SizedBox(height: AppConstants.commonVerticalSpacing),
               workSummaryCard(controller, context),
               SizedBox(height: AppConstants.commonVerticalSpacing),
-              Obx(
-                () => AppFilledButton(
-                  isLoading: controller.isLogoutProcessing.value,
-                  onPressedCallBack: controller.logout,
-                  buttonText: "Logout",
-                ),
+              AppFilledButton(                
+                onPressedCallBack: () {
+                  AppUtils.appDialog(
+                    context: context,
+                    onSubmitCallBack: () async {
+                      await controller.logout();
+                    },
+                    onCancelCallBack: () {
+                      context.pop();
+                    },
+                    isLoading: ()=> controller.isLogoutProcessing.value,
+                  );
+                },
+                buttonText: "Logout",
               ),
+
+              SizedBox(height: AppConstants.commonVerticalSpacing),
             ],
           ),
         );
