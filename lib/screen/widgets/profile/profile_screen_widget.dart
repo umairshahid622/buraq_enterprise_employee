@@ -37,7 +37,12 @@ class ProfileScreenWidget extends StatelessWidget {
                     onCancelCallBack: () {
                       context.pop();
                     },
-                    isLoading: ()=> controller.isLogoutProcessing.value,
+                    isLoading: () => controller.isLogoutProcessing.value,
+                    icon: Icons.logout,
+                    title: "Log Out?",
+                    message: "Are you sure you want to logout? Any unsaved data will be lost.",
+                    subMessage: "" ,
+                    submitButtonText: "Logout",
                   );
                 },
                 buttonText: "Logout",

@@ -478,8 +478,14 @@ class AppUtils {
   static Future<void> appDialog({
     required BuildContext context,
     required Function() onSubmitCallBack,
-    required Function() onCancelCallBack,
+    Function()? onCancelCallBack,
     required bool Function() isLoading,
+    
+    required IconData icon,
+    required String title,
+    required String message,
+    required String subMessage,
+    required String submitButtonText,
   }) async {
     await showDialog(
       barrierDismissible: true,
@@ -516,24 +522,33 @@ class AppUtils {
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.logout,
+                    icon,
                     color: context.appColors.chipColor,
                     size: 42,
                   ),
                 ),
                 SizedBox(height: AppConstants.commonVerticalSpacing),
-                AppTextHeading(text: "Log Out?", fontSize: 24),
+                AppTextHeading(text: title, fontSize: 24),
                 SizedBox(height: AppConstants.commonVerticalSpacing),
                 AppTextBody(
-                  text:
-                      "Are you sure you want to logout? Any unsaved data will be lost.",
+                  text: message,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   textAlign: TextAlign.center,
                 ),
+                if(subMessage.isNotEmpty) ... [
+                  SizedBox(height: AppConstants.commonVerticalSpacing),
+                  AppTextBody(
+                    text: subMessage,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    textAlign: TextAlign.center,
+                  ),
+                ],
                 SizedBox(height: AppConstants.commonVerticalSpacing),
                 Row(
                   children: [
+                    if(onCancelCallBack != null) ... [
                     Expanded(
                       child: AppFilledButton(
                         onPressedCallBack: onCancelCallBack,
@@ -542,12 +557,13 @@ class AppUtils {
                       ),
                     ),
                     SizedBox(width: 12),
+                    ],
                     Expanded(
                       child: Obx(
                         () => AppFilledButton(
                           isLoading: isLoading(),
                           onPressedCallBack: onSubmitCallBack,
-                          buttonText: "Logout",
+                          buttonText: submitButtonText,
                         ),
                       ),
                     ),
