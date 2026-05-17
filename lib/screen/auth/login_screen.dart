@@ -100,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
               barrierColor: Colors.transparent,
               elevation: 10.0,
               context: context,
-              isDismissible: true,
+              isDismissible: false,
               builder: (BuildContext context) {
                 return OtpBottomSheetWidget();
               },
