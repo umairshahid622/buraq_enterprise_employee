@@ -1,4 +1,5 @@
 
+import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/controllers/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,6 +23,7 @@ class ThemeToggleButton extends StatelessWidget {
           child: Icon(
             isDark ? Icons.light_mode : Icons.dark_mode,
             key: ValueKey(isDark),
+            color: isDark? context.appColors.primary: context.appColors.secondary,
           ),
         ),
         onPressed: controller.toggleTheme,
