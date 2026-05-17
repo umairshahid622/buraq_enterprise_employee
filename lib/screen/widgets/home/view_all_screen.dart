@@ -41,11 +41,11 @@ class ViewAllScreen extends StatelessWidget {
 
             Expanded(
               child: AppScrollableBody(
-                child: Column(
+                child: Obx(() => Column(
                   children: [
                     SizedBox(height: AppConstants.commonVerticalSpacing),
                     isProject ? projectList(context: context,projects: controller.filteredProjects) : expenseList(context: context,expenses: controller.filteredExpenses)],
-                ),
+                ),),
               ),
             ),
           ],
@@ -56,13 +56,13 @@ class ViewAllScreen extends StatelessWidget {
 
   Widget projectList({required BuildContext context,List<ProjectWithBudget>? projects }) {
     return projects!.isEmpty
-    ? Center(child: AppUtils.noDataFound(context: context, heading: "No projects found", subHeading: "No projects found"))
+    ? Center(child: AppUtils.noDataFound(context: context, heading: "No projects found", subHeading: "Try another keyword"))
     : AppUtils.projectList(projects:projects);
   }
 
   Widget expenseList({required BuildContext context, List<AddExpenseModel>? expenses }) {
     return expenses!.isEmpty
-    ? Center(child: AppUtils.noDataFound(context: context, heading: "No expenses found", subHeading: "No expenses found"))
+    ? Center(child: AppUtils.noDataFound(context: context, heading: "No expenses found", subHeading: "Try another keyword"))
     : AppUtils.expenseList(expenses: expenses);
   }
 }

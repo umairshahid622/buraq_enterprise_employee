@@ -52,17 +52,23 @@ class HomeScreenWidget extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AppTextHeading(text: "My Projects", fontSize: 16),
-                            AppTextButton(
-                              buttonText: "View All",
-                              onPressedCallBack: () {
-                                context.push(
-                                  "/home/view-all",
-                                  extra: {
-                                    'isProject': true,
-                                    'projects': projectsWithBudget,
-                                  },
-                                );
-                              },
+                            Visibility(
+                              visible: projectsWithBudget.length > 2,
+                              maintainSize: true,
+                              maintainAnimation: true,
+                              maintainState: true,
+                              child: AppTextButton(
+                                buttonText: "View All",
+                                onPressedCallBack: () {
+                                  context.push(
+                                    "/home/view-all",
+                                    extra: {
+                                      'isProject': true,
+                                      'projects': projectsWithBudget,
+                                    },
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         )
@@ -76,7 +82,10 @@ class HomeScreenWidget extends StatelessWidget {
                           heading: "No projects available",
                           subHeading: "Ask you admin to assign you a project",
                         )
-                      : AppUtils.projectList(projects:controller.projectsWithBudget,projectLength: 2),
+                      : AppUtils.projectList(
+                          projects: controller.projectsWithBudget,
+                          projectLength: 2,
+                        ),
                   SizedBox(height: AppConstants.commonVerticalSpacing / 2),
                   expenses.isNotEmpty
                       ? Row(
@@ -86,17 +95,24 @@ class HomeScreenWidget extends StatelessWidget {
                               text: "Recent Expenses",
                               fontSize: 16,
                             ),
-                            AppTextButton(
-                              buttonText: "View All",
-                              onPressedCallBack: () {
-                                context.push(
-                                  "/home/view-all",
-                                  extra: {
-                                    'isProject': false,
-                                    'expenses': expenses,
-                                  },
-                                );
-                              },
+                            Visibility(
+                              visible: expenses.length > 2,
+                              maintainSize: true,
+                              maintainAnimation: true,
+                              maintainState: true,
+
+                              child: AppTextButton(
+                                buttonText: "View All",
+                                onPressedCallBack: () {
+                                  context.push(
+                                    "/home/view-all",
+                                    extra: {
+                                      'isProject': false,
+                                      'expenses': expenses,
+                                    },
+                                  );
+                                },
+                              ),
                             ),
                           ],
                         )
@@ -105,7 +121,10 @@ class HomeScreenWidget extends StatelessWidget {
                       ? SizedBox(height: AppConstants.commonVerticalSpacing / 2)
                       : SizedBox.shrink(),
                   expenses.isNotEmpty
-                      ? AppUtils.expenseList(expenses: expenses,expenseLength: 2)
+                      ? AppUtils.expenseList(
+                          expenses: expenses,
+                          expenseLength: 2,
+                        )
                       : SizedBox.shrink(),
                 ],
               ),

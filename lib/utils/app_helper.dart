@@ -6,6 +6,7 @@ import 'package:buraq_enterprise_employee/screen/controllers/add_expense/add_exp
 import 'package:buraq_enterprise_employee/screen/controllers/common/main_layout_controller.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/home/expense_transaction_screen_controller.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/home/home_screen_controller.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/home/view_all_screen_controller.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/my_stats/my_stats_screen_controller.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/profile/profile_screen_controller.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/splash/splash_screen_controller.dart';
@@ -295,6 +296,7 @@ class AppHelper {
     debugPrint("AddExpenseScreenController: ${Get.isRegistered<AddExpenseScreenController>()}");
     debugPrint("MyStatsScreenController: ${Get.isRegistered<MyStatsScreenController>()}");
     debugPrint("ProfileScreenController: ${Get.isRegistered<ProfileScreenController>()}");
+    debugPrint("ViewAllScreenController: ${Get.isRegistered<ViewAllScreenController>()}");
     debugPrint("=========================================");
   }
 }
