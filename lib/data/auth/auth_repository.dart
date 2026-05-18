@@ -42,6 +42,7 @@ class AuthRepository {
     await AuthHelper.call(() async {
       _auth.verifyPhoneNumber(
         phoneNumber: formattedPhone,
+        
         verificationCompleted: (PhoneAuthCredential credential) async {
           await _auth.signInWithCredential(credential);
           if (!completer.isCompleted) completer.complete();
