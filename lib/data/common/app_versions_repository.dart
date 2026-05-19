@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:buraq_enterprise_employee/utils/classes/app_verision_model.dart';
+import 'package:buraq_enterprise_employee/models/app_version_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppVersionsRepository {

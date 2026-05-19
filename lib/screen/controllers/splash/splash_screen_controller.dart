@@ -21,15 +21,6 @@ class SplashController extends GetxController {
     _userController = Get.find<UserController>();
   }
 
-  Future<void> seedVersionData() async {
-    try {
-    _versionRepo.seedVersionData();
-      
-    } catch (e) {
-      debugPrint("SEEDING ERROR $e");
-    }
-  }
-
   Future<void> checkVersion(BuildContext context) async {
     if (_hasStartedVersionCheck) return;
     _hasStartedVersionCheck = true;
