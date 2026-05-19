@@ -17,7 +17,6 @@ class UserController extends BaseController {
 
   /// Public getter
   UserModel? get user => _user.value;
-  
 
   @override
   void onInit() {
@@ -33,8 +32,6 @@ class UserController extends BaseController {
 
     if (currentUser != null) {
       await fetchUserProfile();
-    } else {
-      await signOut();
     }
   }
 
@@ -50,13 +47,14 @@ class UserController extends BaseController {
       _user.value = data;
     } else {
       _user.value = null;
-      await signOut();
     }
   }
 
   Future<void> signOut() async {
-    Get.deleteAll();
-    await safeCall(() => _authRepo.signOut());
-    _user.value = null;
+    final (data, success) = await safeCall(() => _authRepo.signOut());
+    if (success) {
+      Get.deleteAll();
+      _user.value = null;
+    }
   }
 }
