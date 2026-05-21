@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:buraq_enterprise_employee/models/app_version_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class AppVersionsRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -53,7 +54,7 @@ class AppVersionsRepository {
     });
 
     await batch.commit();
-    print('✅ Version data seeded successfully');
+    debugPrint('✅ Version data seeded successfully');
   }
 
   Future<VersionModel> getVersion() async {
