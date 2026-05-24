@@ -1,7 +1,7 @@
 import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart';
 import 'package:buraq_enterprise_employee/core/controllers/theme_controller.dart';
 import 'package:buraq_enterprise_employee/core/controllers/user_controller.dart';
-import 'package:buraq_enterprise_employee/screen/auth/login_controller.dart';
+import 'package:buraq_enterprise_employee/screen/auth/controllers/login/login_controller.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/add_expense/add_expense_screen_controller.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/common/main_layout_controller.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/home/expense_transaction_screen_controller.dart';
@@ -280,23 +280,61 @@ class AppHelper {
     return DateFormat('MMM dd yyyy').format(date);
   }
 
-  
-  static void printActiveControllers(){
+  static String? emailValidator({required String value}) {
+    if (value.isEmpty) {
+      return 'Please enter your email address';
+    }
+
+    String pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+    RegExp regExp = RegExp(pattern);
+
+    if (!regExp.hasMatch(value)) {
+      return 'Enter a valid email address (e.g., [testmail@gmail.com])';
+    }
+    return null;
+  }
+
+  static String? passwordValidator({required String value}) {
+    if (value.isEmpty) {
+      return 'Please enter your password';
+    }
+
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
+
+  static void printActiveControllers() {
     debugPrint("=========================================");
     debugPrint("   CURRENT ACTIVE GETX CONTROLLERS       ");
     debugPrint("=========================================");
     debugPrint("LoginController: ${Get.isRegistered<LoginController>()}");
     debugPrint("ThemeController: ${Get.isRegistered<ThemeController>()}");
     debugPrint("SplashController: ${Get.isRegistered<SplashController>()}");
-    debugPrint("ManageExpenseScreenController: ${Get.isRegistered<ManageExpenseScreenController>()}");
+    debugPrint(
+      "ManageExpenseScreenController: ${Get.isRegistered<ManageExpenseScreenController>()}",
+    );
     debugPrint("BaseController: ${Get.isRegistered<BaseController>()}");
     debugPrint("UserController: ${Get.isRegistered<UserController>()}");
-    debugPrint("MainLayoutDataController: ${Get.isRegistered<MainLayoutDataController>()}");
-    debugPrint("HomeScreenController: ${Get.isRegistered<HomeScreenController>()}");
-    debugPrint("AddExpenseScreenController: ${Get.isRegistered<AddExpenseScreenController>()}");
-    debugPrint("MyStatsScreenController: ${Get.isRegistered<MyStatsScreenController>()}");
-    debugPrint("ProfileScreenController: ${Get.isRegistered<ProfileScreenController>()}");
-    debugPrint("ViewAllScreenController: ${Get.isRegistered<ViewAllScreenController>()}");
+    debugPrint(
+      "MainLayoutDataController: ${Get.isRegistered<MainLayoutDataController>()}",
+    );
+    debugPrint(
+      "HomeScreenController: ${Get.isRegistered<HomeScreenController>()}",
+    );
+    debugPrint(
+      "AddExpenseScreenController: ${Get.isRegistered<AddExpenseScreenController>()}",
+    );
+    debugPrint(
+      "MyStatsScreenController: ${Get.isRegistered<MyStatsScreenController>()}",
+    );
+    debugPrint(
+      "ProfileScreenController: ${Get.isRegistered<ProfileScreenController>()}",
+    );
+    debugPrint(
+      "ViewAllScreenController: ${Get.isRegistered<ViewAllScreenController>()}",
+    );
     debugPrint("=========================================");
   }
 }

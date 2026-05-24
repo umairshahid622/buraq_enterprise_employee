@@ -3,6 +3,7 @@ import 'package:buraq_enterprise_employee/data/auth/auth_repository.dart';
 import 'package:buraq_enterprise_employee/data/auth/employee_repository.dart';
 import 'package:buraq_enterprise_employee/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UserController extends BaseController {
@@ -39,14 +40,15 @@ class UserController extends BaseController {
   // Fetch profile
   // -------------------------------
   Future<void> fetchUserProfile() async {
+    debugPrint("Inside Fetch User Profile");
     final (data, success) = await safeCall(
-      () => _employeeRepository.getEmployeeData(),
+      () => _employeeRepository.getEmployeeData()
     );
 
     if (success && data != null) {
       _user.value = data;
     } else {
-      _user.value = null;
+      await signOut();
     }
   }
 

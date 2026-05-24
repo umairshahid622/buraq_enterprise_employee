@@ -9,6 +9,7 @@ import 'package:buraq_enterprise_employee/models/allocated_amount_model.dart';
 import 'package:buraq_enterprise_employee/models/project_model.dart';
 import 'package:buraq_enterprise_employee/models/user_model.dart';
 import 'package:buraq_enterprise_employee/utils/classes/project_with_budget.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class MainLayoutDataController extends BaseController {
@@ -37,8 +38,10 @@ class MainLayoutDataController extends BaseController {
   void onInit() {
     super.onInit();
     _userController = Get.find<UserController>();
+    debugPrint("Fetched Data Called");
 
     if (_userController.user?.empId.isNotEmpty == true) {
+      debugPrint("Inside User is not Empty");
       fetchData();
       return;
     }
@@ -46,6 +49,7 @@ class MainLayoutDataController extends BaseController {
     Worker? worker;
     worker = ever<UserModel?>(_userController.userRx, (UserModel? user) {
       if (user != null && user.empId.isNotEmpty) {
+        debugPrint("Inside Worker");
         fetchData();
         worker?.dispose();
       }
@@ -55,7 +59,7 @@ class MainLayoutDataController extends BaseController {
   Future<void> fetchData() async {
     final empId = _userController.userRx.value?.empId;
     if (empId == null || empId.isEmpty) return;
-
+    debugPrint("Fetched Data Called");
     final (result, success) = await safeCall(
       () => Future.wait([
         _allocatedAmountRepository.getAllocatedAmount(employeeId: empId),

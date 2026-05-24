@@ -6,7 +6,7 @@ import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/layouts/auth_layout.dart';
 import 'package:buraq_enterprise_employee/layouts/main_layout.dart';
 import 'package:buraq_enterprise_employee/models/add_expense_model.dart';
-import 'package:buraq_enterprise_employee/screen/auth/login_screen.dart';
+import 'package:buraq_enterprise_employee/screen/auth/widgets/login/login_screen.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/add_expense/add_expense_screen_widget.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/home/manage_expense_screen_widget.dart';
 import 'package:buraq_enterprise_employee/screen/widgets/home/home_screen_widget.dart';

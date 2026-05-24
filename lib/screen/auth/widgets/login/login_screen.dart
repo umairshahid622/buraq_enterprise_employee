@@ -2,12 +2,12 @@ import 'package:buraq_enterprise_employee/core/config/colors/app_colors.dart';
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
-import 'package:buraq_enterprise_employee/screen/auth/login_controller.dart';
+import 'package:buraq_enterprise_employee/screen/auth/controllers/login/login_controller.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_scroll_body.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/app_text_field.dart';
-import 'package:buraq_enterprise_employee/utils/widgets/bottom_sheet.dart/widget/otp_bottom_sheet_widget.dart';
 import 'package:buraq_enterprise_employee/utils/widgets/buttons/app_filled_button.dart';
+import 'package:buraq_enterprise_employee/utils/widgets/buttons/app_text_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -41,22 +41,52 @@ class _LoginScreenState extends State<LoginScreen> {
       centerContent: true,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: AppConstants.padding),
-        child: Form(
-          key: controller.formKey,
-          child: Column(
-            children: [
-              _appIcon(context: context),
-              SizedBox(height: spacing),
-              AppTextHeading(text: "Employee Login"),
-              SizedBox(height: spacing),
-              _phoneNumberField(controller),
-              SizedBox(height: spacing),
-              _continueButton(controller, context),
-              SizedBox(height: spacing),
-              AppTextBody(text: "Credentials provided by admin"),
-            ],
-          ),
+        child: Column(
+          children: [
+            _appIcon(context: context),
+            SizedBox(height: spacing),
+            AppTextHeading(text: "Employee Login"),
+            SizedBox(height: spacing),          
+            loginForm(controller: controller, spacing: spacing),
+            SizedBox(height: spacing),
+            AppTextBody(text: "Credentials provided by admin"),
+          ],
         ),
+      ),
+    );
+  }
+
+  Form loginForm({required LoginController controller, double? spacing}) {
+    return Form(
+      key: controller.formKey,
+      child: Column(
+        children: [
+          AppTextField(
+            controller: controller.emailController,
+            type: TextFieldType.email,
+            hintText: "Enter Your Email Address",
+            labelText: "Email Address",
+          ),
+          SizedBox(height: spacing != null ? spacing / 2 : null),
+          Obx(
+            () => AppTextField(
+              controller: controller.passwordController,
+              type: TextFieldType.password,
+              hintText: "Enter Your Password",
+              labelText: "Password",
+              obscureText: controller.obscureText.value,
+              onSuffixTap: () {
+                controller.obscureText.value = !controller.obscureText.value;
+              },
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerRight,
+            child: AppTextButton(buttonText: "Forgot Password?"),
+          ),
+          SizedBox(height: spacing),
+          _continueButton(controller, context),
+        ],
       ),
     );
   }
@@ -77,38 +107,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  AppTextField _phoneNumberField(LoginController controller) {
-    return AppTextField(
-      prefixIcon: const Icon(Icons.phone),
-      type: TextFieldType.phoneNumber,
-      controller: controller.phoneNumberController,
-      hintText: "Enter Your Phone Number",
-    );
-  }
-
   Widget _continueButton(LoginController controller, BuildContext context) {
     return Obx(() {
       return AppFilledButton(
-        isLoading: controller.verifyNumberLoading.value,
+        isLoading: controller.isLoading.value,
         buttonText: "Continue",
-        onPressedCallBack: () {
-          controller.verifyPhoneNumber((verId) {
-            if (!context.mounted) return;
-            showModalBottomSheet(
-              
-              backgroundColor: Colors.black.withValues(alpha: 0.25),
-              barrierColor: Colors.transparent,
-              elevation: 10.0,
-              context: context,
-              isDismissible: false,
-              builder: (BuildContext context) {
-                return OtpBottomSheetWidget();
-              },
-            ).whenComplete(() {
-              controller.resetOtpFlow();
-            });
-          });
-        },
+        onPressedCallBack: () =>controller.login(),
       );
     });
   }

@@ -268,7 +268,9 @@ class AppUtils {
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: projectLength?.clamp(0, projectLength) ?? projects.length,
+      itemCount: projectLength != null
+          ? projectLength.clamp(0, projects.length)
+          : projects.length,
       itemBuilder: (context, index) {
         final ProjectWithBudget projectWithBudget = projects[index];
 
@@ -370,7 +372,9 @@ class AppUtils {
     return ListView.separated(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: expenseLength?.clamp(0, expenseLength) ?? expenses.length,
+      itemCount: expenseLength != null
+          ? expenseLength.clamp(0, expenses.length)
+          : expenses.length,
       itemBuilder: (context, index) {
         return AppCardWidget(
           onTap: () {
