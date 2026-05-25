@@ -199,14 +199,18 @@ class ManageExpenseScreenWidget extends StatelessWidget {
                   return;
                 }
                 final success = await controller.useItemSubmit();
-                if (context.mounted) {
-                  context.pop();
+                if (success) {
+                  if (context.mounted) {
+                    context.pop();
+                  }
                 }
                 AppUtils.showToast(
                   label: success
                       ? "Item Used Saved Successfully"
-                      : "Failed to save item usage",
-                  variant: success ? ToastVariants.success : ToastVariants.error,
+                      : "Failed to save",
+                  variant: success
+                      ? ToastVariants.success
+                      : ToastVariants.error,
                 );
               },
               buttonText: "Save Used Quantity",
@@ -231,7 +235,12 @@ class ManageExpenseScreenWidget extends StatelessWidget {
           value: "${controller.availaibleItems} Units",
         ),
         SizedBox(height: spacing),
-        expenseDetail(title: "Total ${controller.selectedIndex == 0 ? 'Used' : 'Returns'} Items", value: "${controller.selectedIndex == 0 ? controller.expense.usedItems : controller.expense.returns}"),
+        expenseDetail(
+          title:
+              "Total ${controller.selectedIndex == 0 ? 'Used' : 'Returns'} Items",
+          value:
+              "${controller.selectedIndex == 0 ? controller.expense.usedItems : controller.expense.returns}",
+        ),
         SizedBox(height: spacing),
         expenseDetail(
           title: "Unit Price",
@@ -275,7 +284,7 @@ class ManageExpenseScreenWidget extends StatelessWidget {
                     labelText: "Quantity to Return",
                     type: TextFieldType.amount,
                     hintText: "Enter quanity to return",
-                    
+
                     customValidator: (value) {
                       if (value!.isEmpty) {
                         return "Quantity to return cannot be empty";
@@ -289,7 +298,7 @@ class ManageExpenseScreenWidget extends StatelessWidget {
                       return null;
                     },
                   ),
-                  SizedBox(height: AppConstants.commonVerticalSpacing / 2),                                    
+                  SizedBox(height: AppConstants.commonVerticalSpacing / 2),
                   AppUtils.totalCostContainer(
                     title: "Refundable Amount",
                     amount: () => controller.totalCost,
@@ -301,7 +310,7 @@ class ManageExpenseScreenWidget extends StatelessWidget {
             SizedBox(height: AppConstants.commonVerticalSpacing),
             AppFilledButton(
               isLoading: controller.isLoading.value,
-              onPressedCallBack: () async{
+              onPressedCallBack: () async {
                 if (controller.availaibleItems == 0) {
                   AppUtils.showToast(
                     label: "No items to return",
@@ -310,14 +319,18 @@ class ManageExpenseScreenWidget extends StatelessWidget {
                   return;
                 }
                 final success = await controller.returnItemSubmit();
-                if (context.mounted) {
-                  context.pop();
+                if (success) {
+                  if (context.mounted) {
+                    context.pop();
+                  }
                 }
                 AppUtils.showToast(
                   label: success
                       ? "Item Returned Successfully"
                       : "Failed to save return item",
-                  variant: success ? ToastVariants.success : ToastVariants.error,
+                  variant: success
+                      ? ToastVariants.success
+                      : ToastVariants.error,
                 );
               },
               buttonText: "Submit Return",

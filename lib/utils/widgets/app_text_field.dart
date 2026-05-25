@@ -125,7 +125,9 @@ class AppTextField extends StatelessWidget {
       keyboardType: keyBoardType,
       onChanged: onTextChangeCallBack,
       validator: (value) {
-        if (type == TextFieldType.phoneNumber) {
+        if (customValidator != null) {
+          return customValidator!(value);
+        } else if (type == TextFieldType.phoneNumber) {
           return AppHelper.phoneNumberValidator(value: value ?? "");
         } else if (type == TextFieldType.text) {
           return AppHelper.textValidator(value: value ?? "");

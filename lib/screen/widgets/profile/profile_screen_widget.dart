@@ -88,7 +88,7 @@ class ProfileScreenWidget extends StatelessWidget {
           SizedBox(height: AppConstants.commonVerticalSpacing),
           AppUtils.divider(colorScheme: context.appColors),
           SizedBox(height: AppConstants.commonVerticalSpacing / 2),
-          contactRow(context: context, text: controller.user.phoneNumber),
+          contactRow(context: context, text: controller.user.email),
           SizedBox(height: AppConstants.commonVerticalSpacing / 2),
           contactRow(
             context: context,
@@ -232,7 +232,7 @@ class ProfileScreenWidget extends StatelessWidget {
   Row contactRow({
     required BuildContext context,
     required String text,
-    IconData icon = Icons.phone,
+    IconData icon = Icons.email_outlined,
   }) {
     return Row(
       children: [

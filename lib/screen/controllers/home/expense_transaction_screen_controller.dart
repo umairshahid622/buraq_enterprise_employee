@@ -3,6 +3,7 @@ import 'package:buraq_enterprise_employee/core/controllers/base_controller.dart'
 import 'package:buraq_enterprise_employee/data/screens/add_expense_repository.dart';
 import 'package:buraq_enterprise_employee/data/screens/manage_expense_repository.dart';
 import 'package:buraq_enterprise_employee/models/add_expense_model.dart';
+import 'package:buraq_enterprise_employee/screen/controllers/common/main_layout_controller.dart';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -12,6 +13,7 @@ class ManageExpenseScreenController extends BaseController {
   ManageExpenseScreenController({required this.expense});
 
   // data controllers
+  final MainLayoutDataController _mainLayoutController = MainLayoutDataController();
 
   //repositories
   final AddExpenseRepository _addExpenseRepository = AddExpenseRepository();
@@ -61,6 +63,7 @@ class ManageExpenseScreenController extends BaseController {
 
   Future<bool> useItemSubmit()  async{
     if (!useItemKey.currentState!.validate()) return false;
+    if (int.parse(useQuanityController.text.trim()) > availaibleItems) return false;
 
     final (updateUseItemresult, updateUseItemSuccess) = await safeCall(
       () => _addExpenseRepository.updateUsedItems(
@@ -81,6 +84,9 @@ class ManageExpenseScreenController extends BaseController {
         additionalNotes: expense.additionalNotes,
       ),
     );
+
+    await _mainLayoutController.fetchData();
+    
     return updateUseItemSuccess && useItemLogSuccess;
   }
 
@@ -105,6 +111,7 @@ class ManageExpenseScreenController extends BaseController {
         additionalNotes: expense.additionalNotes,
       ),
     );
+    await _mainLayoutController.fetchData();
     return success && useItemLogSuccess;
   }
 
