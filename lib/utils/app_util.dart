@@ -454,9 +454,7 @@ class AppUtils {
                   ),
                   SizedBox(height: AppConstants.commonVerticalSpacing),
                   Row(
-                    children: [
-                      expenseCard(context, "Returns", expenses[index].returns),
-                      SizedBox(width: 12),
+                    children: [                      
                       expenseCard(
                         context,
                         "Available",
@@ -464,6 +462,8 @@ class AppUtils {
                             expenses[index].usedItems -
                             expenses[index].returns,
                       ),
+                      SizedBox(width: 12),
+                      expenseCard(context, "Returns", expenses[index].returns),
                       SizedBox(width: 12),
                       expenseCard(context, "Used", expenses[index].usedItems),
                     ],
