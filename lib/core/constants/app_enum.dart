@@ -9,3 +9,5 @@ enum ToastVariants {success, error}
 enum Roles {admin, employee}
 
 enum InfoCardType {amount, number}
+
+enum ExpenseStatus { pending, approved, rejected }

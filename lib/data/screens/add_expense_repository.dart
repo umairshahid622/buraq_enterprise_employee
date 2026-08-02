@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
 import 'package:buraq_enterprise_employee/models/add_expense_model.dart';
 import 'package:buraq_enterprise_employee/utils/firestore_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
 
 class AddExpenseRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -39,6 +41,7 @@ class AddExpenseRepository {
         'returns': 0,
         'category':category,
         'projectName': projectName,
+        'status': ExpenseStatus.pending.name,
         'receiptUrl': receiptUrl,
         'createdAt': FieldValue.serverTimestamp(),
         'updatedAt': FieldValue.serverTimestamp(),
