@@ -15,9 +15,9 @@ class AddExpenseModel {
   String receiptUrl;
   String createdBy;
   String updatedBy;
-
-  DateTime createdAt; // ✅ DateTime not Timestamp
-  DateTime updatedAt; // ✅ DateTime not Timestamp
+  String   status;
+  DateTime createdAt; 
+  DateTime updatedAt;
 
   AddExpenseModel({
     required this.expenseId,
@@ -36,7 +36,8 @@ class AddExpenseModel {
     required this.updatedAt,
     required this.createdBy,
     required this.updatedBy,
-  });
+    required this.status,
+    });
 
   factory AddExpenseModel.fromSnapshot(DocumentSnapshot doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -54,10 +55,11 @@ class AddExpenseModel {
       category: data['category'] ?? '',
       projectName: data['projectName'] ?? '',
       receiptUrl: data['receiptUrl'] ?? '',
-      createdAt: (data['createdAt'] as Timestamp).toDate(), // ✅ Timestamp → DateTime
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(), // ✅ Timestamp → DateTime
+      createdAt: (data['createdAt'] as Timestamp).toDate(), 
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(), 
       createdBy: data['createdBy'] ?? '',
       updatedBy: data['updatedBy'] ?? '',
+      status: data['status'] ?? '',
     );
   }
 

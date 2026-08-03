@@ -1,5 +1,6 @@
 import 'package:buraq_enterprise_employee/core/config/extensions/app_colors_extension.dart';
 import 'package:buraq_enterprise_employee/core/constants/app_constants.dart';
+import 'package:buraq_enterprise_employee/core/constants/app_enum.dart';
 import 'package:buraq_enterprise_employee/models/add_expense_model.dart';
 import 'package:buraq_enterprise_employee/models/project_model.dart';
 import 'package:buraq_enterprise_employee/screen/controllers/my_stats/my_stats_screen_controller.dart';
@@ -534,6 +535,7 @@ class MyStatsScreenWidget extends StatelessWidget {
       updatedAt: DateTime.now(),
       createdBy: "",
       updatedBy: "",
-    );
+      status: ExpenseStatus.pending.name,
+    );  
   }
 }
